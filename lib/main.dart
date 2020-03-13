@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:meal_payment_culculator/person.dart';
+
+import 'meal.dart';
 
 void main() => runApp(Home());
 
