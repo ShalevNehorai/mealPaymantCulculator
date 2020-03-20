@@ -1,9 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/person.dart';
-import 'package:meal_payment_culculator/tabTest.dart';
+import 'package:meal_payment_culculator/meal.dart';
 
-import 'meal.dart';
 
 void main() => runApp(Home());
 
@@ -22,8 +23,7 @@ class AppState extends State<Home>{
 
   Widget getDinersPage(BuildContext context){//diners page
     return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
         children: <Widget>[
           Container(
             alignment: Alignment.topCenter,
@@ -36,55 +36,60 @@ class AppState extends State<Home>{
               ),
             ),
           ),
-          TextField(
-            controller: tECDinerName,
-          ),
-          OutlineButton(
-            splashColor: Colors.cyan,
-            child: Icon(
-              Icons.add,
-              color: Colors.grey[600],
-            ),
-            onPressed: () {
-              String name = tECDinerName.text;
-              if (name.isNotEmpty) {
-                setState(() {
-                  _diners.add(new Person(name));
-                  tECDinerName.clear();
-                });
-                for (var per in _diners) {
-                  print('in list ' + per.name);
-                }
-              }
-              else{
-                Fluttertoast.showToast(
-                  msg: 'the name is empty',
-                  fontSize: 25.0,
-                );
-              }
+          ListView.separated(
+            physics: ClampingScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: _diners.length,
+            itemBuilder: (context, i){
+              final rng = new Random();
+              final diner = _diners[i];
+              diner.addPayment(rng.nextInt(50));
+              return ListTile(
+                leading: Text(diner.name),
+                title: Text('row payment: ' + diner.payment.toString() + ' 15%: ' + diner.getPaymentWithTip(0.15).toStringAsFixed(2)),
+                onLongPress: () {//TODO change to slide left to delete the person
+                  setState(() {
+                    _diners.removeAt(i);  
+                  });
+                },
+              );
             },
+            separatorBuilder: (context, index) => Divider(),
+          ),  
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: TextField(
+              controller: tECDinerName,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: OutlineButton(
+              splashColor: Colors.cyan,
+              child: Icon(
+                Icons.person_add,
+                color: Colors.grey[600],
+              ),
+              onPressed: () {
+                String name = tECDinerName.text;
+                if (name.isNotEmpty) {
+                  setState(() {
+                    _diners.add(new Person(name));
+                    tECDinerName.clear();
+                  });
+                }
+                else{
+                  Fluttertoast.showToast(
+                    msg: 'the name is empty',
+                    fontSize: 25.0,
+                  );
+                }
+              },
+            ),
           ),
         ]
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.person_add),
-        onPressed: () {
-          print('person');
-        },
-      ),
     );
-  }
-
-  Widget getDinersList(){
-    return _diners.isEmpty? Card() : ListView.builder(
-      itemCount: _diners.length,
-      itemBuilder: (context, i){
-        print('got here');
-        return ListTile(
-          title: Text(_diners[i].name),
-        );
-      }
-    ); 
   }
 
   Widget getMealsPage(BuildContext context){//meals page

@@ -23,6 +23,8 @@ class Person {
 
   void removePayment(removedPayment) => this._payment -= removedPayment;
 
+  void resetPayment() => this._payment = 0.0;
+
   double getPaymentWithTip(double tipPersentage){
     return (tipPersentage + 1) * payment;
   }
