@@ -36,25 +36,60 @@ class AppState extends State<Home>{
               ),
             ),
           ),
-          ListView.separated(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Text('name'),
+              Text('no tip'),
+              Text('10% tip'),
+              Text('15% tip'),
+              Text('Delete'),
+            ],
+          ),
+          ListView.builder(
             physics: ClampingScrollPhysics(),
             shrinkWrap: true,
             itemCount: _diners.length,
             itemBuilder: (context, i){
-              final rng = new Random();
               final diner = _diners[i];
-              diner.addPayment(rng.nextInt(50));
-              return ListTile(
-                leading: Text(diner.name),
-                title: Text('row payment: ' + diner.payment.toString() + ' 15%: ' + diner.getPaymentWithTip(0.15).toStringAsFixed(2)),
-                onLongPress: () {//TODO change to slide left to delete the person
-                  setState(() {
-                    _diners.removeAt(i);  
-                  });
-                },
-              );
+              return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.cyan),
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          constraints: BoxConstraints(minWidth: 50, maxWidth: 80),
+                          child: Text(diner.name),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                          ),
+                        ),
+                        title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Text('${diner.getPaymentWithTip(0).toStringAsFixed(2)}',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                            Text('${diner.getPaymentWithTip(0.1).toStringAsFixed(2)}',
+                                style: TextStyle(fontSize: 14),
+                            ),
+                            Text('${diner.getPaymentWithTip(0.15).toStringAsFixed(2)}',
+                                style: TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),//Text('row payment: ' + diner.payment.toString() + ' 15%: ' + diner.getPaymentWithTip(0.15).toStringAsFixed(2)),
+                        trailing: IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
+                          onPressed: () {
+                            setState(() {
+                              _diners.removeAt(i);  
+                            });
+                          },
+                        ),
+                      ),
+                  );
             },
-            separatorBuilder: (context, index) => Divider(),
+            //separatorBuilder: (context, index) => Divider(),
           ),  
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
