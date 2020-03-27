@@ -14,7 +14,7 @@ class Meal{
   }
 
   double get price{
-    return price;
+    return _price;
   }
 
   set price(double price){
@@ -37,5 +37,10 @@ class Meal{
     for (var eater in _eaters) {
       eater.addPayment(_price / numberOfEaters);
     }
+  }
+
+  @override
+  String toString(){
+    return "name: " + name + " price: " + price.toString();
   }
 }

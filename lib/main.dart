@@ -1,6 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/person.dart';
 import 'package:meal_payment_culculator/meal.dart';
@@ -16,10 +15,14 @@ class Home extends StatefulWidget{
 }
 
 class AppState extends State<Home>{
+  final List<bool> isSelected = [false, false, false];
 
   final tECDinerName = TextEditingController();
+  final tECMealsName = TextEditingController();
+  final tECMealsPrice = TextEditingController();
 
   final _diners = <Person>[];
+  final _meals = <Meal>[];
 
   Widget getDinersPage(BuildContext context){//diners page
     return Scaffold(
@@ -106,7 +109,7 @@ class AppState extends State<Home>{
                 color: Colors.grey[600],
               ),
               onPressed: () {
-                String name = tECDinerName.text;
+                String name = tECDinerName.text.trim();
                 if (name.isNotEmpty) {
                   setState(() {
                     _diners.add(new Person(name));
@@ -129,12 +132,112 @@ class AppState extends State<Home>{
 
   Widget getMealsPage(BuildContext context){//meals page
     return Scaffold(
-      body: Center(child: Text('meals page'),),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.fastfood),
-        onPressed: () {
-          print('food');
-        },
+      body: ListView(
+        children: <Widget>[
+          Container(
+            alignment: Alignment.topCenter,
+            margin: EdgeInsets.symmetric(vertical: 20, horizontal: 0),
+            child: Text(
+              'meals page',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+          ),
+          ListView.builder(
+            physics: ClampingScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: _meals.length,
+            itemBuilder: (context, i){
+              final meal = _meals[i];
+              //final List<bool> isSelected = new List<bool>(_diners.length);
+              return ListTile(
+                leading: Text(meal.name),
+                title: ToggleButtons(
+                  children: <Widget>[
+                    Text('all'),
+                    Text('first'),
+                    Text('Second'),
+                  ], 
+                  onPressed: (int index) {
+                    setState(() {
+                      setState(() {
+                        isSelected[index] = !isSelected[index];
+                        bool isAllSelected = true;
+                        for (var j = 1; j < isSelected.length; j++) {
+                          if(index == 0){
+                            isSelected[j] = isSelected[0];
+                            isAllSelected = isSelected[0];
+                          }
+                          else{
+                            isAllSelected &= isSelected[j];
+                          }
+                        }
+                        isSelected[0] = isAllSelected;
+                      });
+                    });
+                  },
+                  isSelected: isSelected,
+                ),
+                trailing: IconButton(
+                  icon: Icon(Icons.delete, color: Colors.red[600],),
+                  onPressed: () {
+                    setState(() {
+                      _meals.removeAt(i);  
+                    });
+                  },
+                ),
+              );
+            }
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: TextField(
+              controller: tECMealsName,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: TextField(
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              controller: tECMealsPrice,
+              inputFormatters: <TextInputFormatter>[
+                BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            child: OutlineButton(
+              splashColor: Colors.cyan,
+              child: Icon(
+                Icons.add,
+                color: Colors.grey[600],
+              ),
+              onPressed: () {
+                String name = tECMealsName.text.trim();
+                String price = tECMealsPrice.text.trim();
+                if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price)!=null) {
+                  setState(() {
+                    _meals.add(new Meal(name, double.parse(price)));
+                    tECMealsName.clear();
+                    tECMealsPrice.clear();
+                  });
+                  for (var meal in _meals) {
+                    print("in list " + meal.toString());
+                  }
+                }
+                else{
+                  Fluttertoast.showToast(
+                    msg: 'the name or price is empty, and price need to be a number',
+                    fontSize: 25.0,
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -169,6 +272,8 @@ class AppState extends State<Home>{
   @override
   void dispose() {
     tECDinerName.dispose();
+    tECMealsName.dispose();
+    tECMealsPrice.dispose();
     super.dispose();
   }
 }
