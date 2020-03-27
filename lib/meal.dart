@@ -43,4 +43,9 @@ class Meal{
   String toString(){
     return "name: " + name + " price: " + price.toString();
   }
+
+  void printEaters(){
+    print('$name');
+    _eaters.forEach((element) {print(element.name);});
+  }
 }

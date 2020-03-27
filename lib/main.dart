@@ -15,7 +15,7 @@ class Home extends StatefulWidget{
 }
 
 class AppState extends State<Home>{
-  final List<bool> isSelected = [false, false, false];
+  final List<bool> isSelected = [false];
 
   final tECDinerName = TextEditingController();
   final tECMealsName = TextEditingController();
@@ -86,6 +86,7 @@ class AppState extends State<Home>{
                           onPressed: () {
                             setState(() {
                               _diners.removeAt(i);  
+                              isSelected.removeAt(i);
                             });
                           },
                         ),
@@ -102,7 +103,7 @@ class AppState extends State<Home>{
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: OutlineButton(
+            child: OutlineButton(//TODO check that every person have uniqe name
               splashColor: Colors.cyan,
               child: Icon(
                 Icons.person_add,
@@ -113,6 +114,7 @@ class AppState extends State<Home>{
                 if (name.isNotEmpty) {
                   setState(() {
                     _diners.add(new Person(name));
+                    isSelected.add(false);
                     tECDinerName.clear();
                   });
                 }
@@ -133,6 +135,7 @@ class AppState extends State<Home>{
   Widget getMealsPage(BuildContext context){//meals page
     return Scaffold(
       body: ListView(
+        shrinkWrap: true,
         children: <Widget>[
           Container(
             alignment: Alignment.topCenter,
@@ -151,32 +154,33 @@ class AppState extends State<Home>{
             itemCount: _meals.length,
             itemBuilder: (context, i){
               final meal = _meals[i];
-              //final List<bool> isSelected = new List<bool>(_diners.length);
+              final toggleButtonList = _diners.map((diner) => Text('${diner.name}')).toList();
+              toggleButtonList.insert(0, Text('all'));
               return ListTile(
                 leading: Text(meal.name),
                 title: ToggleButtons(
-                  children: <Widget>[
-                    Text('all'),
-                    Text('first'),
-                    Text('Second'),
-                  ], 
+                  children: toggleButtonList,
                   onPressed: (int index) {
                     setState(() {
-                      setState(() {
-                        isSelected[index] = !isSelected[index];
-                        bool isAllSelected = true;
-                        for (var j = 1; j < isSelected.length; j++) {
-                          if(index == 0){
-                            isSelected[j] = isSelected[0];
-                            isAllSelected = isSelected[0];
-                          }
-                          else{
-                            isAllSelected &= isSelected[j];
-                          }
+                      isSelected[index] = !isSelected[index];
+                      bool isAllSelected = true;
+                      for (var j = 1; j < isSelected.length; j++) {
+                        if(index == 0){
+                          isSelected[j] = isSelected[0];
+                          isAllSelected = isSelected[0];
                         }
-                        isSelected[0] = isAllSelected;
-                      });
+                        else{
+                          isAllSelected &= isSelected[j];
+                        }
+                      }
+                      isSelected[0] = isAllSelected;
+                      if (isSelected[index]) {
+                        meal.addEater(_diners[index-1]);
+                      } else {
+                        meal.removeEater(_diners[index-1]);
+                      }
                     });
+                    meal.printEaters();
                   },
                   isSelected: isSelected,
                 ),
@@ -192,18 +196,26 @@ class AppState extends State<Home>{
             }
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: TextField(
-              controller: tECMealsName,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: TextField(
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              controller: tECMealsPrice,
-              inputFormatters: <TextInputFormatter>[
-                BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                  flex: 4,
+                  child: TextField(
+                    controller: tECMealsName,
+                  ),
+                ),
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
+                Flexible(
+                  flex: 2,
+                  child: TextField(
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    controller: tECMealsPrice,
+                    inputFormatters: <TextInputFormatter>[
+                      BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -237,6 +249,18 @@ class AppState extends State<Home>{
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: RaisedButton(
+              child: Text('calc'),
+              onPressed: () {
+                setState(() {
+                  _diners.forEach((element) {element.resetPayment();});
+                  _meals.forEach((element) {element.addMealPriceToEatersPayment();});
+                });
+              },
+            ),
+          )
         ],
       ),
     );
