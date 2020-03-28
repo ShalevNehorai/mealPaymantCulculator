@@ -24,11 +24,29 @@ class Meal{
   Meal(this._name, this._price);
 
   void addEater(Person eater){
-    this._eaters.add(eater);
+    if(!this._eaters.contains(eater)){
+      this._eaters.add(eater);
+    }
+  }
+
+  void addEaters(List<Person> eaters){
+    eaters.forEach((eater) { addEater(eater); });
   }
 
   void removeEater(Person eater){
     this._eaters.remove(eater);
+  }
+
+  void removeEaters(List<Person> eaters){
+    eaters.forEach((eater) { removeEater(eater); });
+  }
+
+  void removeAllEates() {
+    this._eaters.clear();
+  }
+
+  bool haveEater(Person eater){
+    return this._eaters.contains(eater);
   }
 
   void addMealPriceToEatersPayment(){
@@ -45,7 +63,9 @@ class Meal{
   }
 
   void printEaters(){
-    print('$name');
-    _eaters.forEach((element) {print(element.name);});
+    String msg = '$name [';
+    _eaters.forEach((element) {msg += ' ${element.name}, ';});
+    msg += ']';
+    print(msg);
   }
 }

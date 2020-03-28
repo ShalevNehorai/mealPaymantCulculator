@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:meal_payment_culculator/meal_row.dart';
 import 'package:meal_payment_culculator/person.dart';
 import 'package:meal_payment_culculator/meal.dart';
 
@@ -15,7 +16,6 @@ class Home extends StatefulWidget{
 }
 
 class AppState extends State<Home>{
-  final List<bool> isSelected = [false];
 
   final tECDinerName = TextEditingController();
   final tECMealsName = TextEditingController();
@@ -85,8 +85,8 @@ class AppState extends State<Home>{
                         trailing: IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
                           onPressed: () {
                             setState(() {
-                              _diners.removeAt(i);  
-                              isSelected.removeAt(i);
+                              _meals.forEach((meal) { meal.removeEater(_diners[i]); });
+                              _diners.removeAt(i);
                             });
                           },
                         ),
@@ -114,7 +114,6 @@ class AppState extends State<Home>{
                 if (name.isNotEmpty) {
                   setState(() {
                     _diners.add(new Person(name));
-                    isSelected.add(false);
                     tECDinerName.clear();
                   });
                 }
@@ -156,41 +155,23 @@ class AppState extends State<Home>{
               final meal = _meals[i];
               final toggleButtonList = _diners.map((diner) => Text('${diner.name}')).toList();
               toggleButtonList.insert(0, Text('all'));
-              return ListTile(
-                leading: Text(meal.name),
-                title: ToggleButtons(
-                  children: toggleButtonList,
-                  onPressed: (int index) {
-                    setState(() {
-                      isSelected[index] = !isSelected[index];
-                      bool isAllSelected = true;
-                      for (var j = 1; j < isSelected.length; j++) {
-                        if(index == 0){
-                          isSelected[j] = isSelected[0];
-                          isAllSelected = isSelected[0];
-                        }
-                        else{
-                          isAllSelected &= isSelected[j];
-                        }
-                      }
-                      isSelected[0] = isAllSelected;
-                      if (isSelected[index]) {
-                        meal.addEater(_diners[index-1]);
-                      } else {
-                        meal.removeEater(_diners[index-1]);
-                      }
-                    });
-                    meal.printEaters();
-                  },
-                  isSelected: isSelected,
+              return Container(
+                padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.cyan),
                 ),
-                trailing: IconButton(
-                  icon: Icon(Icons.delete, color: Colors.red[600],),
-                  onPressed: () {
-                    setState(() {
-                      _meals.removeAt(i);  
-                    });
-                  },
+                child: Row(
+                  children: <Widget>[
+                    MealRow(meal: meal, diners: _diners),
+                    IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red[600],),
+                      onPressed: () {
+                        setState(() {
+                          _meals.removeAt(i);  
+                        });
+                      },
+                    ),
+                  ],
                 ),
               );
             }
@@ -257,6 +238,11 @@ class AppState extends State<Home>{
                 setState(() {
                   _diners.forEach((element) {element.resetPayment();});
                   _meals.forEach((element) {element.addMealPriceToEatersPayment();});
+                  Fluttertoast.showToast(
+                    msg: 'payment culculated',
+                    toastLength: Toast.LENGTH_LONG,
+                    fontSize: 25.0,
+                  );
                 });
               },
             ),
@@ -294,6 +280,14 @@ class AppState extends State<Home>{
   }
 
   @override
+  void setState(fn) {
+    _meals.forEach((meal) {
+      //meal.removeAllEates();
+    });
+    super.setState(fn);
+  }
+
+  @override
   void dispose() {
     tECDinerName.dispose();
     tECMealsName.dispose();
@@ -301,3 +295,4 @@ class AppState extends State<Home>{
     super.dispose();
   }
 }
+
