@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/person.dart';

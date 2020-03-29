@@ -59,7 +59,7 @@ class Meal{
 
   @override
   String toString(){
-    return "name: " + name + " price: " + price.toString();
+    return 'name: $name, price: $price';
   }
 
   void printEaters(){

@@ -81,7 +81,7 @@ class AppState extends State<Home>{
                                 style: TextStyle(fontSize: 14),
                             ),
                           ],
-                        ),//Text('row payment: ' + diner.payment.toString() + ' 15%: ' + diner.getPaymentWithTip(0.15).toStringAsFixed(2)),
+                        ),
                         trailing: IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
                           onPressed: () {
                             setState(() {
@@ -91,9 +91,8 @@ class AppState extends State<Home>{
                           },
                         ),
                       ),
-                  );
+                    );
             },
-            //separatorBuilder: (context, index) => Divider(),
           ),  
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -103,7 +102,7 @@ class AppState extends State<Home>{
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: OutlineButton(//TODO check that every person have uniqe name
+            child: OutlineButton(
               splashColor: Colors.cyan,
               child: Icon(
                 Icons.person_add,
@@ -112,10 +111,18 @@ class AppState extends State<Home>{
               onPressed: () {
                 String name = tECDinerName.text.trim();
                 if (name.isNotEmpty) {
-                  setState(() {
-                    _diners.add(new Person(name));
-                    tECDinerName.clear();
-                  });
+                  if(!isPersonExists(name)){
+                    setState(() {
+                      _diners.add(new Person(name));
+                      tECDinerName.clear();
+                    });
+                  }
+                  else{
+                    Fluttertoast.showToast(
+                      msg: 'name allready exists',
+                      fontSize: 25.0,
+                    );
+                  }
                 }
                 else{
                   Fluttertoast.showToast(
@@ -126,7 +133,7 @@ class AppState extends State<Home>{
               },
             ),
           ),
-        ]
+        ],
       ),
     );
   }
@@ -153,8 +160,6 @@ class AppState extends State<Home>{
             itemCount: _meals.length,
             itemBuilder: (context, i){
               final meal = _meals[i];
-              final toggleButtonList = _diners.map((diner) => Text('${diner.name}')).toList();
-              toggleButtonList.insert(0, Text('all'));
               return Container(
                 padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
                 decoration: BoxDecoration(
@@ -211,19 +216,16 @@ class AppState extends State<Home>{
               onPressed: () {
                 String name = tECMealsName.text.trim();
                 String price = tECMealsPrice.text.trim();
-                if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price)!=null) {
+                if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null) {
                   setState(() {
                     _meals.add(new Meal(name, double.parse(price)));
                     tECMealsName.clear();
                     tECMealsPrice.clear();
                   });
-                  for (var meal in _meals) {
-                    print("in list " + meal.toString());
-                  }
                 }
                 else{
                   Fluttertoast.showToast(
-                    msg: 'the name or price is empty, and price need to be a number',
+                    msg: 'the name or price is empty, and price must to be a number',
                     fontSize: 25.0,
                   );
                 }
@@ -279,12 +281,13 @@ class AppState extends State<Home>{
     );
   }
 
-  @override
-  void setState(fn) {
-    _meals.forEach((meal) {
-      //meal.removeAllEates();
-    });
-    super.setState(fn);
+  bool isPersonExists(String name){
+    for (var person in _diners) {
+      if(person.name == name){
+        return true;
+      }
+    }
+    return false;
   }
 
   @override
