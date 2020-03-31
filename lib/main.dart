@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:meal_payment_culculator/diner_row.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
 import 'package:meal_payment_culculator/person.dart';
 import 'package:meal_payment_culculator/meal.dart';
@@ -55,53 +56,14 @@ class AppState extends State<Home>{
             itemCount: _diners.length,
             itemBuilder: (context, i){
               final diner = _diners[i];
-              return Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.cyan),
-                      ),
-                      child: ListTile(
-                        leading: Container(
-                          child: Center(child: Text(diner.name, style: TextStyle(
-                            fontSize: 18,
-                          ),),),
-                          //padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                          constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
-                          decoration: BoxDecoration(
-                            border: Border.all(),
-                          ),
-                        ),
-                        title: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Container(
-                              child: Center(
-                                child: Text('${diner.getPaymentWithTip(0).toStringAsFixed(2)}',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ),
-                              constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                              ),
-                            ),
-                            Text('${diner.getPaymentWithTip(0.1).toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 14),
-                            ),
-                            Text('${diner.getPaymentWithTip(0.15).toStringAsFixed(2)}',
-                                style: TextStyle(fontSize: 14),
-                            ),
-                          ],
-                        ),
-                        trailing: IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
-                          onPressed: () {
-                            setState(() {
-                              _meals.forEach((meal) { meal.removeEater(_diners[i]); });
-                              _diners.removeAt(i);
-                            });
-                          },
-                        ),
-                      ),
+              return DinerRow(
+                      diner: diner,
+                      delete: (){
+                        setState(() {
+                          _meals.forEach((meal) { meal.removeEater(_diners[i]); });
+                          _diners.removeAt(i);
+                        });
+                      },
                     );
             },
           ),  
@@ -297,4 +259,3 @@ class AppState extends State<Home>{
     super.dispose();
   }
 }
-
