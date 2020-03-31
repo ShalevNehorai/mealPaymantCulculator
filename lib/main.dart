@@ -61,18 +61,29 @@ class AppState extends State<Home>{
                       ),
                       child: ListTile(
                         leading: Container(
-                          constraints: BoxConstraints(minWidth: 50, maxWidth: 80),
-                          child: Text(diner.name),
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Center(child: Text(diner.name, style: TextStyle(
+                            fontSize: 18,
+                          ),),),
+                          //padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                          constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
                           decoration: BoxDecoration(
                             border: Border.all(),
                           ),
                         ),
                         title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: <Widget>[
-                            Text('${diner.getPaymentWithTip(0).toStringAsFixed(2)}',
-                              style: TextStyle(fontSize: 14),
+                            Container(
+                              child: Center(
+                                child: Text('${diner.getPaymentWithTip(0).toStringAsFixed(2)}',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                              ),
+                              constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                              ),
                             ),
                             Text('${diner.getPaymentWithTip(0.1).toStringAsFixed(2)}',
                                 style: TextStyle(fontSize: 14),
@@ -160,25 +171,13 @@ class AppState extends State<Home>{
             itemCount: _meals.length,
             itemBuilder: (context, i){
               final meal = _meals[i];
-              return Container(
-                padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.cyan),
-                ),
-                child: Row(
-                  children: <Widget>[
-                    MealRow(meal: meal, diners: _diners),
-                    IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red[600],),
-                      onPressed: () {
-                        setState(() {
-                          _meals.removeAt(i);  
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              );
+              return MealRow(meal: meal, diners: _diners, 
+                delete: (){
+                setState(() {
+                    _meals.removeAt(i);  
+                  });
+                }
+              ,);
             }
           ),
           Padding(

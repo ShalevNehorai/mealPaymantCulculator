@@ -6,11 +6,12 @@ class MealRow extends StatefulWidget {
 
   final Meal meal;
   final List<Person> diners;
+  final Function delete;
 
   var isSelected = List<bool>();
   var toggleButtonList;
 
-  MealRow({this.meal, this.diners}){
+  MealRow({this.meal, this.diners, this.delete}){
     generateSelectedList();
 
     toggleButtonList = diners.map((diner) => Text('${diner.name}')).toList();
@@ -32,6 +33,8 @@ class _MealRowState extends State<MealRow> {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Column(
           children: <Widget>[
@@ -40,15 +43,16 @@ class _MealRowState extends State<MealRow> {
             ),),
             SizedBox(height: 4.0,),
             Text(widget.meal.price.toString(), style: TextStyle(
-              fontSize: 10.0,
+              fontSize: 14.0,
             ),)
           ],
         ),
         Container(
           constraints: BoxConstraints(
-            maxWidth: 250.0,
+            maxWidth: 270.0,
           ),
           child: SingleChildScrollView(
+
             scrollDirection: Axis.horizontal,
             child: ToggleButtons(
               children: widget.toggleButtonList,
@@ -78,6 +82,10 @@ class _MealRowState extends State<MealRow> {
               },
             ),
           ),
+        ),
+        IconButton(
+          icon: Icon(Icons.delete, color: Colors.red[600],),
+          onPressed: widget.delete,
         ),
       ],
     );
