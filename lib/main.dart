@@ -19,11 +19,18 @@ class Home extends StatefulWidget{
 class AppState extends State<Home>{
 
   final tECDinerName = TextEditingController();
+  final tECTipPersentage = TextEditingController();
   final tECMealsName = TextEditingController();
   final tECMealsPrice = TextEditingController();
 
   final _diners = <Person>[];
   final _meals = <Meal>[];
+
+  @override
+  void initState(){
+    super.initState();
+    tECTipPersentage.text = 10.toString();
+  }
 
   Widget getDinersPage(BuildContext context){//diners page
     return Scaffold(
@@ -40,13 +47,29 @@ class AppState extends State<Home>{
               ),
             ),
           ),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            child: TextField(
+              decoration: InputDecoration(
+                labelText: 'enter tip persantage here'
+              ),
+              maxLength: 3,
+              controller: tECTipPersentage,
+              onChanged: (value) {
+                setState(() {});
+              },
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              inputFormatters: <TextInputFormatter>[
+                BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
+              ],
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Text('name'),
               Text('no tip'),
-              Text('10% tip'),
-              Text('15% tip'),
+              Text('paymenr with tip'),
               Text('Delete'),
             ],
           ),
@@ -56,15 +79,17 @@ class AppState extends State<Home>{
             itemCount: _diners.length,
             itemBuilder: (context, i){
               final diner = _diners[i];
+              double tip = double.tryParse(tECTipPersentage.text);
               return DinerRow(
-                      diner: diner,
-                      delete: (){
-                        setState(() {
-                          _meals.forEach((meal) { meal.removeEater(_diners[i]); });
-                          _diners.removeAt(i);
-                        });
-                      },
-                    );
+                diner: diner,
+                tipPersentage: tip != null  ? double.parse(tECTipPersentage.text):0.0,
+                delete: (){
+                  setState(() {
+                    _meals.forEach((meal) { meal.removeEater(_diners[i]); });
+                    _diners.removeAt(i);
+                  });
+                },
+              );
             },
           ),  
           Padding(
@@ -92,7 +117,7 @@ class AppState extends State<Home>{
                   }
                   else{
                     Fluttertoast.showToast(
-                      msg: 'name allready exists',
+                      msg: 'name already exists',
                       fontSize: 25.0,
                     );
                   }
@@ -256,6 +281,7 @@ class AppState extends State<Home>{
     tECDinerName.dispose();
     tECMealsName.dispose();
     tECMealsPrice.dispose();
+    tECTipPersentage.dispose();
     super.dispose();
   }
 }

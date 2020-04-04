@@ -4,9 +4,10 @@ import 'package:meal_payment_culculator/person.dart';
 class DinerRow extends StatelessWidget {
 
   final Person diner;
+  final double tipPersentage;
   final Function delete;
 
-  DinerRow({this.diner, this.delete});
+  DinerRow({this.diner, this.tipPersentage, this.delete});
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +28,8 @@ class DinerRow extends StatelessWidget {
             ),),),
           ),
           PaymentWidget(payment: diner.getPaymentWithTip(0.0),),
-          PaymentWidget(payment: diner.getPaymentWithTip(0.1),),
-          PaymentWidget(payment: diner.getPaymentWithTip(0.15),),
+          PaymentWidget(payment: diner.getPaymentWithTip(tipPersentage/100),),
+          //PaymentWidget(payment: diner.getPaymentWithTip(0.15),),
           IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
             onPressed: delete,
           ),
