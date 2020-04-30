@@ -243,6 +243,7 @@ class AppState extends State<Home>{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: true,
       title: appName,
       home: DefaultTabController(
         length: 2,

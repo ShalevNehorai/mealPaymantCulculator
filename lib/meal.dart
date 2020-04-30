@@ -4,6 +4,7 @@ class Meal{
   String _name;
   double _price;
   List<Person> _eaters = new List<Person>();
+  List<MealExtra> _extras = new List<MealExtra>();
 
   String get name{
     return _name;
@@ -13,12 +14,24 @@ class Meal{
     this._name = name;
   }
 
-  double get price{
+  double get rawPrice{
     return _price;
   }
 
-  set price(double price){
+  double get fullPrice{
+    double fullPrice = rawPrice;
+    _extras.forEach((extra) {
+      fullPrice += extra.price;
+    });
+    return fullPrice;
+  }
+
+  set rawPrice(double price){
     this._price = price;
+  }
+
+  List<MealExtra> get extras{
+    return this._extras;
   }
 
   Meal(this._name, this._price);
@@ -49,17 +62,33 @@ class Meal{
     return this._eaters.contains(eater);
   }
 
+  void addExtra(MealExtra mealExtra){
+    this._extras.add(mealExtra);
+  }
+
+  void addExtras(List<MealExtra> mealExtras){
+    mealExtras.forEach((element) {this.addExtra(element); });
+  }
+  
+  void removeExtra(MealExtra mealExtra){
+    this._extras.remove(mealExtra);
+  }
+
+  void removeExtras(List<MealExtra> mealExtras){
+    mealExtras.forEach((element) {this.removeExtra(element); });
+  }
+
   void addMealPriceToEatersPayment(){
     int numberOfEaters = _eaters.length;
 
     for (var eater in _eaters) {
-      eater.addPayment(_price / numberOfEaters);
+      eater.addPayment(fullPrice / numberOfEaters);
     }
   }
 
   @override
   String toString(){
-    return 'name: $name, price: $price';
+    return 'name: $name, price: $rawPrice';
   }
 
   void printEaters(){
@@ -68,4 +97,18 @@ class Meal{
     msg += ']';
     print(msg);
   }
+
+   void printExtras(){
+    String msg = '$name [';
+    _extras.forEach((element) {msg += ' ${element.name}, ';});
+    msg += ']';
+    print(msg);
+  }
+}
+
+class MealExtra{
+  String name;
+  double price;
+
+  MealExtra(this.name, this.price);
 }
