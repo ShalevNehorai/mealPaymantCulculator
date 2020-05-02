@@ -94,4 +94,6 @@ class DatabaseHelper {
     }
     return null;
   }
+
+  //TODO: add delete method from db
 }

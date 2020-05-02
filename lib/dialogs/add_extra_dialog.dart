@@ -6,15 +6,13 @@ import 'package:meal_payment_culculator/meal.dart';
 class AddExtraDialog extends StatelessWidget {
 
   final Meal meal;
-  final Function closeFunc;
 
   final tECExtraName = TextEditingController();
   final tECExtraPrice = TextEditingController();
 
-  AddExtraDialog({@required this.meal, @required this.closeFunc});
+  AddExtraDialog({@required this.meal});
 
   void closeDialog(BuildContext context){
-    this.closeFunc();
     Navigator.of(context).pop();
   }
 

@@ -114,8 +114,8 @@ class _MealRowState extends State<MealRow> {
                   showDialog(
                     context: context, 
                     barrierDismissible: true,
-                    builder: (context) => AddExtraDialog(meal: widget.meal, closeFunc: (){setState(() {});}),
-                  );
+                    builder: (context) => AddExtraDialog(meal: widget.meal),
+                  ).then((value) => setState((){print(value);}));
                 });
               },
             ),
