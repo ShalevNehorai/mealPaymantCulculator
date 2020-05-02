@@ -92,44 +92,51 @@ class AppState extends State<Home>{
               );
             },
           ),  
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: TextField(
-              controller: tECDinerName,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-            child: OutlineButton(
-              splashColor: Colors.cyan,
-              child: Icon(
-                Icons.person_add,
-                color: Colors.grey[600],
+          Row(
+            children: <Widget>[
+              Flexible(
+                flex: 3,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 12.0, left: 12.0, bottom: 12.0),
+                  child: TextField(
+                    controller: tECDinerName,
+                  ),
+                ),
               ),
-              onPressed: () {
-                String name = tECDinerName.text.trim();
-                if (name.isNotEmpty) {
-                  if(!isPersonExists(name)){
-                    setState(() {
-                      _diners.add(new Person(name));
-                      tECDinerName.clear();
-                    });
-                  }
-                  else{
-                    Fluttertoast.showToast(
-                      msg: 'name already exists',
-                      fontSize: 25.0,
-                    );
-                  }
-                }
-                else{
-                  Fluttertoast.showToast(
-                    msg: 'the name is empty',
-                    fontSize: 25.0,
-                  );
-                }
-              },
-            ),
+              Flexible(
+                flex: 1,
+                child: OutlineButton(
+                  splashColor: Colors.cyan,
+                  child: Icon(
+                    Icons.person_add,
+                    color: Colors.grey[600],
+                  ),
+                  onPressed: () {
+                    String name = tECDinerName.text.trim();
+                    if (name.isNotEmpty) {
+                      if(!isPersonExists(name)){
+                        setState(() {
+                          _diners.add(new Person(name));
+                          tECDinerName.clear();
+                        });
+                      }
+                      else{
+                        Fluttertoast.showToast(
+                          msg: 'name already exists',
+                          fontSize: 25.0,
+                        );
+                      }
+                    }
+                    else{
+                      Fluttertoast.showToast(
+                        msg: 'the name is empty',
+                        fontSize: 25.0,
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
