@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:meal_payment_culculator/database_helper.dart';
 import 'package:meal_payment_culculator/diner_row.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
 import 'package:meal_payment_culculator/person.dart';
@@ -30,6 +31,36 @@ class AppState extends State<Home>{
   void initState(){
     super.initState();
     tECTipPersentage.text = 10.toString();
+  }
+
+  _saveCurrentGroup() async{
+    GroupModel groupModel = GroupModel();
+    if (_diners.length > 1) {
+      groupModel.members = _diners.map((e) => e.name).toList();
+      //open dialog to get the name
+      groupModel.name = 'test 4';
+      DatabaseHelper helper = DatabaseHelper.instance;
+      try {
+        int id = await helper.insert(groupModel);  
+        print('inserted row: $id');
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+    else{
+      Fluttertoast.showToast(
+        msg: 'there need to be at list 2 diners',
+        fontSize: 25.0,
+      );
+    }
+  }
+
+  _read() async{
+    DatabaseHelper helper = DatabaseHelper.instance;
+    List<GroupModel> groupModel = await helper.queryAllGroups();
+    if(groupModel != null){
+      print(groupModel.toString());
+    }
   }
 
   Widget getDinersPage(BuildContext context){//diners page
@@ -64,14 +95,17 @@ class AppState extends State<Home>{
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Text('name'),
-              Text('no tip'),
-              Text('paymenr with tip'),
-              Text('Delete'),
-            ],
+          Visibility(
+            visible: _diners.length > 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text('name'),
+                Text('no tip'),
+                Text('paymenr with tip'),
+                Text('Delete'),
+              ],
+            ),
           ),
           ListView.builder(
             physics: ClampingScrollPhysics(),
@@ -138,7 +172,20 @@ class AppState extends State<Home>{
               ),
             ],
           ),
+          RaisedButton(
+            onPressed: () {
+              _saveCurrentGroup();
+            }, 
+            child: Text('save current party'),
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Load group from memory',
+        onPressed: () {
+          _read();
+        },
+        child: Icon(Icons.group_add),
       ),
     );
   }

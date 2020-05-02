@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meal_payment_culculator/add_extra_dialog.dart';
+import 'package:meal_payment_culculator/dialogs/add_extra_dialog.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/person.dart';
 
