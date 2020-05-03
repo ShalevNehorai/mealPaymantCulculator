@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
+import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
 import 'package:meal_payment_culculator/diner_row.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
 import 'package:meal_payment_culculator/person.dart';
@@ -18,6 +19,7 @@ class Home extends StatefulWidget{
 }
 
 class AppState extends State<Home>{
+  final navigatorKey = GlobalKey<NavigatorState>();
 
   final tECDinerName = TextEditingController();
   final tECTipPersentage = TextEditingController();
@@ -34,18 +36,38 @@ class AppState extends State<Home>{
   }
 
   _saveCurrentGroup() async{
-    GroupModel groupModel = GroupModel();
+    DatabaseHelper helper = DatabaseHelper.instance;
     if (_diners.length > 1) {
-      groupModel.members = _diners.map((e) => e.name).toList();
-      //open dialog to get the name
-      groupModel.name = 'test 4';
-      DatabaseHelper helper = DatabaseHelper.instance;
-      try {
-        int id = await helper.insert(groupModel);  
-        print('inserted row: $id');
-      } catch (e) {
-        print(e.toString());
-      }
+      showDialog(
+        context: navigatorKey.currentState.overlay.context,
+        barrierDismissible: true,
+        builder: (context) => TextDiglod(
+          title: 'Enter group name', 
+          validitiCheck: (value) async {
+            if(value.isEmpty){
+              return 'please enter text';
+            }
+            bool isExsist = await helper.isGroupNameExisted(value);
+            if(isExsist){
+              return 'the name is already taken';
+            }
+            return null;
+          }
+        ),
+      ).then((value) async {
+        if(value != null){
+          GroupModel groupModel = GroupModel();
+          groupModel.name = value;
+          groupModel.members = _diners.map((e) => e.name).toList();
+          try {
+            int id = await helper.insert(groupModel);  
+            print('inserted row: $id');
+          } catch (e) {
+            print(e.toString());
+          }
+        }
+        else print('group name dialog has canceled');
+      });
     }
     else{
       Fluttertoast.showToast(
@@ -55,12 +77,13 @@ class AppState extends State<Home>{
     }
   }
 
-  _read() async{
+  Future<List<GroupModel>> _read() async{
     DatabaseHelper helper = DatabaseHelper.instance;
-    List<GroupModel> groupModel = await helper.queryAllGroups();
-    if(groupModel != null){
-      print(groupModel.toString());
+    List<GroupModel> groupModels = await helper.queryAllGroups();
+    if(groupModels != null){
+      return groupModels;
     }
+    return null;
   }
 
   Widget getDinersPage(BuildContext context){//diners page
@@ -182,8 +205,9 @@ class AppState extends State<Home>{
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Load group from memory',
-        onPressed: () {
-          _read();
+        onPressed: () async {
+          List<GroupModel> groups = await _read();
+          print(groups.toString());
         },
         child: Icon(Icons.group_add),
       ),
@@ -297,6 +321,7 @@ class AppState extends State<Home>{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: true,
       title: appName,
       home: DefaultTabController(

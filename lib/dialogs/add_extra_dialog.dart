@@ -65,7 +65,7 @@ class AddExtraDialog extends StatelessWidget {
               children: <Widget>[
                 RaisedButton(
                   color: Colors.red[300],
-                  child: Text('cencel', style: TextStyle(
+                  child: Text('cancel', style: TextStyle(
                     fontSize: 16.0
                   ),),
                   onPressed: () => this.closeDialog(context)

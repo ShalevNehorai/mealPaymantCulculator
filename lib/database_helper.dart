@@ -95,5 +95,9 @@ class DatabaseHelper {
     return null;
   }
 
+  Future<bool> isGroupNameExisted(String name) async{
+    GroupModel groupModel = await queryGroup(name);
+    return groupModel != null;
+  }
   //TODO: add delete method from db
 }
