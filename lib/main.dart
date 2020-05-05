@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
+import 'package:meal_payment_culculator/dialogs/choose_group_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
 import 'package:meal_payment_culculator/diner_row.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
@@ -87,6 +88,7 @@ class AppState extends State<Home>{
   }
 
   Widget getDinersPage(BuildContext context){//diners page
+    FocusNode focusNode = FocusNode();
     return Scaffold(
       body: ListView(
         children: <Widget>[
@@ -156,6 +158,8 @@ class AppState extends State<Home>{
                 child: Padding(
                   padding: const EdgeInsets.only(right: 12.0, left: 12.0, bottom: 12.0),
                   child: TextField(
+                    focusNode: focusNode,
+                    autofocus: false,
                     controller: tECDinerName,
                   ),
                 ),
@@ -206,8 +210,21 @@ class AppState extends State<Home>{
       floatingActionButton: FloatingActionButton(
         tooltip: 'Load group from memory',
         onPressed: () async {
-          List<GroupModel> groups = await _read();
-          print(groups.toString());
+          focusNode.unfocus();
+          showDialog(
+            context: navigatorKey.currentState.overlay.context,
+            builder: (context) => ChooseGroupDialog(),
+          ).then((value) {
+            print(value);
+            setState(() {
+              for (var member in value.members) {
+                Person diner = Person(member.toString());
+                if(!isPersonExists(diner.name)){
+                  _diners.add(diner);
+                }
+              }
+            });
+          });
         },
         child: Icon(Icons.group_add),
       ),

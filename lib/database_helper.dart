@@ -11,21 +11,27 @@ class GroupModel {
   String name;
   List<String> members;
 
-  String delim = '|';
+  String _delim = '|';
 
   GroupModel();
 
   GroupModel.fromMap(Map<String, dynamic> map){
     this.name = map[columnName];
-    this.members = map[columnMembers].toString().split(delim);
+    this.members = map[columnMembers].toString().split(_delim);
   }
 
    Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnName: name,
-      columnMembers: members.join(delim)
+      columnMembers: members.join(_delim)
     };
     return map;
+  }
+
+  String getMemdersNames(){
+    String msg = '';
+    members.forEach((element) {msg += '${element.toString()} ';});
+    return msg;
   }
 
   @override
@@ -99,5 +105,17 @@ class DatabaseHelper {
     GroupModel groupModel = await queryGroup(name);
     return groupModel != null;
   }
+
   //TODO: add delete method from db
+  Future<int> deleteSavedGroup(String groupName) async{ 
+    Database db = await database;
+    if(await isGroupNameExisted(groupName)){
+      return await db.delete(tableGroubs, 
+        where: '$columnName = ?',
+        whereArgs: [groupName],
+      );
+    }
+    print('no group with that name');
+    return -1;
+  }
 }
