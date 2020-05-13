@@ -19,9 +19,41 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
   }
 
   void _deleteSavedGroup(GroupModel groupModel) async{
-    DatabaseHelper helper = DatabaseHelper.instance;
-    int result = await helper.deleteSavedGroup(groupModel.name);
-    print(result);
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+          title: Text('are you sure you wont to delete ${groupModel.name}?', style: TextStyle(
+            fontSize: 22.0,
+          ),),
+          content: Text('this will remove the group ${groupModel.name} from the list'),
+          actions: <Widget>[
+            RaisedButton(
+              child: Text('CANCLE'),
+              color: Colors.red[200],
+              onPressed: () => Navigator.of(context).pop(false),
+            ),
+            RaisedButton(
+              child: Text('DELETE'),
+              color: Colors.blue[300],
+              onPressed: () => Navigator.of(context).pop(true),
+            )
+          ],
+        );
+      },
+    ).then((value) async{
+      if(value != null){
+        if(value) {
+          DatabaseHelper helper = DatabaseHelper.instance;
+          int result = await helper.deleteSavedGroup(groupModel.name);
+          if(mounted){
+            setState(() {
+              print(result);
+            });
+          }
+        }
+      }
+    });
   }
 
   @override
@@ -58,10 +90,8 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red,),
                     onPressed: () {
-                      setState(() {
-                        print('remove ${groupModel.name} from list');
-                        _deleteSavedGroup(groupModel);
-                      });
+                      print('remove ${groupModel.name} from list');
+                      _deleteSavedGroup(groupModel);
                     },
                   ),
                 );

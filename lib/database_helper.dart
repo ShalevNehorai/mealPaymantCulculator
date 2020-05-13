@@ -106,7 +106,6 @@ class DatabaseHelper {
     return groupModel != null;
   }
 
-  //TODO: add delete method from db
   Future<int> deleteSavedGroup(String groupName) async{ 
     Database db = await database;
     if(await isGroupNameExisted(groupName)){

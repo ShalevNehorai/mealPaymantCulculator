@@ -215,15 +215,17 @@ class AppState extends State<Home>{
             context: navigatorKey.currentState.overlay.context,
             builder: (context) => ChooseGroupDialog(),
           ).then((value) {
-            print(value);
-            setState(() {
-              for (var member in value.members) {
-                Person diner = Person(member.toString());
-                if(!isPersonExists(diner.name)){
-                  _diners.add(diner);
+            if(value != null){
+              print(value);
+              setState(() {
+                for (var member in value.members) {
+                  Person diner = Person(member.toString());
+                  if(!isPersonExists(diner.name)){
+                    _diners.add(diner);
+                  }
                 }
-              }
-            });
+              });
+            }
           });
         },
         child: Icon(Icons.group_add),
