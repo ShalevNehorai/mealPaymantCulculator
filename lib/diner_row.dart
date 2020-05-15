@@ -39,13 +39,14 @@ class DinerRow extends StatelessWidget {
           fontSize: 24.0,
         ),),
         trailing: SizedBox(
-          width: 100,
+          width: 120,
           child: Row(
             children: <Widget>[
-              IconButton(icon: Icon(Icons.edit, color: Colors.grey[600],),
+              IconButton(icon: Icon(Icons.edit, color: Colors.grey[600], size: 30),
                 onPressed: editName,
               ),
-              IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
+              SizedBox(width: 20,),
+              IconButton(icon: Icon(Icons.delete, color: Colors.red[600], size: 30,),
                 onPressed: delete,
               ),
             ],

@@ -13,6 +13,7 @@ class PersonsPage extends StatefulWidget {
 
 class _PersonsPageState extends State<PersonsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
 
   FocusNode focusNode = FocusNode();
   final tECDinerName = TextEditingController();
@@ -214,13 +215,16 @@ class _PersonsPageState extends State<PersonsPage> {
                     ),
                   ],
                 ),
-                RaisedButton(
-                  onPressed: () {
-                    _saveCurrentGroup();
-                  }, 
-                  child: Text('save current party'),
-                ), 
-              ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: RaisedButton(
+                    onPressed: () {
+                      _saveCurrentGroup();
+                    },
+                    child: Text('save current party'),
+                  ),
+                ),
+              ]
             ),
           ),
           Padding(
@@ -229,7 +233,9 @@ class _PersonsPageState extends State<PersonsPage> {
               alignment: Alignment.bottomRight,
               child: RaisedButton(
                 onPressed: _diners.isEmpty? null : () {
-                  Navigator.pushNamed(context, '/meals');
+                  Navigator.pushNamed(context, '/meals', arguments: {
+                    'diners': _diners
+                  });
                 },
                 child: Text('Next'),
               ),
