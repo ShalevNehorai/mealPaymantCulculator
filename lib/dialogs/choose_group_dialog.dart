@@ -23,7 +23,7 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
       context: context, 
       builder: (context) {
         return AlertDialog(
-          title: Text('are you sure you wont to delete ${groupModel.name}?', style: TextStyle(
+          title: Text('are you sure you want to delete ${groupModel.name}?', style: TextStyle(
             fontSize: 22.0,
           ),),
           content: Text('this will remove the group ${groupModel.name} from the list'),

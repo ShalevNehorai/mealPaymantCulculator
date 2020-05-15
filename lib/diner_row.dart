@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
 import 'package:meal_payment_culculator/person.dart';
 
 class DinerRow extends StatelessWidget {
@@ -6,34 +7,50 @@ class DinerRow extends StatelessWidget {
   final Person diner;
   final double tipPersentage;
   final Function delete;
+  final Function editName;
 
-  DinerRow({this.diner, this.tipPersentage, this.delete});
+  DinerRow({@required this.diner, this.tipPersentage, @required this.delete, @required this.editName});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
       padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
-      child: Row(
+      /*child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Container(
             constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
-            decoration: BoxDecoration(
-              border: Border.all(),
-            ),
             child: Center(child: Text(diner.name, style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 24.0,
             ),),),
           ),
-          PaymentWidget(payment: diner.getPaymentWithTip(0.0),),
-          PaymentWidget(payment: diner.getPaymentWithTip(tipPersentage/100),),
+          //PaymentWidget(payment: diner.getPaymentWithTip(0.0),),
+          // PaymentWidget(payment: diner.getPaymentWithTip(tipPersentage/100),),
           //PaymentWidget(payment: diner.getPaymentWithTip(0.15),),
           IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
             onPressed: delete,
           ),
         ],
+      ),*/
+      child: ListTile(
+        leading: Text(diner.name, style: TextStyle(
+          fontSize: 24.0,
+        ),),
+        trailing: SizedBox(
+          width: 100,
+          child: Row(
+            children: <Widget>[
+              IconButton(icon: Icon(Icons.edit, color: Colors.grey[600],),
+                onPressed: editName,
+              ),
+              IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
+                onPressed: delete,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

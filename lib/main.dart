@@ -6,6 +6,9 @@ import 'package:meal_payment_culculator/dialogs/choose_group_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
 import 'package:meal_payment_culculator/diner_row.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
+import 'package:meal_payment_culculator/pages/meals_page.dart';
+import 'package:meal_payment_culculator/pages/persons_page.dart';
+import 'package:meal_payment_culculator/pages/summry_page.dart';
 import 'package:meal_payment_culculator/person.dart';
 import 'package:meal_payment_culculator/meal.dart';
 
@@ -42,7 +45,7 @@ class AppState extends State<Home>{
       showDialog(
         context: navigatorKey.currentState.overlay.context,
         barrierDismissible: true,
-        builder: (context) => TextDiglod(
+        builder: (context) => TextInputDiglod(
           title: 'Enter group name', 
           validitiCheck: (value) async {
             if(value.isEmpty){
@@ -141,6 +144,7 @@ class AppState extends State<Home>{
               double tip = double.tryParse(tECTipPersentage.text);
               return DinerRow(
                 diner: diner,
+                editName: (){},
                 tipPersentage: tip != null  ? double.parse(tECTipPersentage.text):0.0,
                 delete: (){
                   setState(() {
@@ -339,7 +343,7 @@ class AppState extends State<Home>{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    /*return MaterialApp(
       navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: true,
       title: appName,
@@ -363,6 +367,15 @@ class AppState extends State<Home>{
           ),
         ),
       ), 
+    );*/
+    return MaterialApp(
+      navigatorKey: navigatorKey,
+      initialRoute: '/persons',
+      routes: {
+        '/persons': (context) => PersonsPage(),
+        '/meals': (context) => MealsPage(),
+        '/summry': (context) => SummryPage()
+      },
     );
   }
 
