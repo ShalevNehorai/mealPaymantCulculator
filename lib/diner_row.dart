@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
 import 'package:meal_payment_culculator/person.dart';
 
 class DinerRow extends StatelessWidget {
@@ -16,24 +15,6 @@ class DinerRow extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
       padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
-      /*child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-            constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
-            child: Center(child: Text(diner.name, style: TextStyle(
-              fontSize: 24.0,
-            ),),),
-          ),
-          //PaymentWidget(payment: diner.getPaymentWithTip(0.0),),
-          // PaymentWidget(payment: diner.getPaymentWithTip(tipPersentage/100),),
-          //PaymentWidget(payment: diner.getPaymentWithTip(0.15),),
-          IconButton(icon: Icon(Icons.delete, color: Colors.red[600],),
-            onPressed: delete,
-          ),
-        ],
-      ),*/
       child: ListTile(
         leading: Text(diner.name, style: TextStyle(
           fontSize: 24.0,

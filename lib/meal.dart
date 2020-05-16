@@ -62,6 +62,10 @@ class Meal{
     return this._eaters.contains(eater);
   }
 
+  bool isEatersEmpty(){
+    return _eaters.isEmpty;
+  }
+
   void addExtra(MealExtra mealExtra){
     this._extras.add(mealExtra);
   }

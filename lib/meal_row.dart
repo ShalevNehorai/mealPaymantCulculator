@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meal_payment_culculator/dialogs/add_extra_dialog.dart';
 import 'package:meal_payment_culculator/meal.dart';
+import 'package:meal_payment_culculator/pages/meals_page.dart';
 import 'package:meal_payment_culculator/person.dart';
 
 class MealRow extends StatefulWidget {
@@ -12,7 +13,7 @@ class MealRow extends StatefulWidget {
   var isSelected = List<bool>();
   var toggleButtonList;
 
-  MealRow({this.meal, this.diners, this.delete}){
+  MealRow({@required this.meal,@required this.diners,@required this.delete}){
     generateSelectedList();
 
     toggleButtonList = diners.map((diner) => ToggleButtonWidget(diner.name, horizontalPadding: 12.0,)).toList();
@@ -110,13 +111,14 @@ class _MealRowState extends State<MealRow> {
               padding: EdgeInsets.symmetric(horizontal: 0.0),
               icon: Icon(Icons.add),
               onPressed: () {
-                setState(() {
-                  showDialog(
-                    context: context, 
-                    barrierDismissible: true,
-                    builder: (context) => AddExtraDialog(meal: widget.meal),
-                  ).then((value) => setState((){print(value);}));
-                });
+                showDialog(
+                  context: context, 
+                  barrierDismissible: true,
+                  builder: (context) => AddExtraDialog(meal: widget.meal),
+                ).then((value) {
+                    context.findAncestorStateOfType<MealsPageState>().setState(() { });
+                  }
+                );
               },
             ),
             IconButton(

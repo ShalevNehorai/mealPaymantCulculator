@@ -13,7 +13,7 @@ class PersonsPage extends StatefulWidget {
 
 class _PersonsPageState extends State<PersonsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
+  // final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
 
   FocusNode focusNode = FocusNode();
   final tECDinerName = TextEditingController();
