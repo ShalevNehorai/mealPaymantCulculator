@@ -84,8 +84,8 @@ class MealsPageState extends State<MealsPage> {
                       Flexible(
                         flex: 2,
                         child: TextField(
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                           controller: tECMealsPrice,
+                          keyboardType: TextInputType.numberWithOptions(decimal: true),
                           inputFormatters: <TextInputFormatter>[
                             BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
                           ],
