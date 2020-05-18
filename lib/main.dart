@@ -370,11 +370,11 @@ class AppState extends State<Home>{
     );*/
     return MaterialApp(
       navigatorKey: navigatorKey,
-      initialRoute: '/persons',
+      initialRoute: PersonsPage.PERSONS_PAGE_ROUTE_NAME,
       routes: {
-        '/persons': (context) => PersonsPage(),
-        '/meals': (context) => MealsPage(),
-        '/summry': (context) => SummryPage()
+        PersonsPage.PERSONS_PAGE_ROUTE_NAME: (context) => PersonsPage(),
+        MealsPage.MEAL_PAGE_ROUTE_NAME : (context) => MealsPage(),
+        SummryPage.SUMMRY_PAGE_ROUTE_NAME: (context) => SummryPage()
       },
     );
   }

@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
+import 'package:meal_payment_culculator/pages/summry_page.dart';
 import 'package:meal_payment_culculator/person.dart';
 
 class MealsPage extends StatefulWidget {
+
+  static String MEAL_PAGE_ROUTE_NAME = '/meals';
+
   @override
   MealsPageState createState() => MealsPageState();
 }
@@ -125,11 +129,28 @@ class MealsPageState extends State<MealsPage> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: RaisedButton(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              RaisedButton(
+                //TODO check spelling
+                child: Text('Split evenly', style: TextStyle(
+                  fontSize: 22
+                ),),
+                onPressed: _meals.isEmpty? null : (){
+                  double personPayment = _getFullPayment() / _diners.length.toDouble();
+                  _diners.forEach((element) {
+                    element.resetPayment();
+                    element.addPayment(personPayment);
+                  });
+
+                  Navigator.pushNamed(context, SummryPage.SUMMRY_PAGE_ROUTE_NAME, arguments: {
+                    'diners': _diners,
+                    'full price': _getFullPayment()
+                  });
+                },
+              ),
+              RaisedButton(
                 onPressed: _meals.isEmpty? null : () {
                   for (Meal meal in _meals) {
                     if(meal.isEatersEmpty()){
@@ -137,6 +158,7 @@ class MealsPageState extends State<MealsPage> {
                         content: Text('Meal ${meal.name} have no eaters selected', style: TextStyle(
                           fontSize: 22
                         ),),
+                        duration: Duration(seconds: 3),
                       ));
                       return;
                     }
@@ -145,13 +167,16 @@ class MealsPageState extends State<MealsPage> {
                   _diners.forEach((element) {element.resetPayment();});
                   _meals.forEach((element) {element.addMealPriceToEatersPayment();});
 
-                  Navigator.pushNamed(context, '/summry', arguments: {
-                    'diners': _diners
+                  Navigator.pushNamed(context, SummryPage.SUMMRY_PAGE_ROUTE_NAME, arguments: {
+                    'diners': _diners,
+                    'full price': _getFullPayment()
                   });
                 },
-                child: Text('Next'),
+                child: Text('Next', style: TextStyle(
+                  fontSize: 22
+                ),),
               ),
-            ),
+            ],
           ),
         ],
       ),

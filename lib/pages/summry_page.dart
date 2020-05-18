@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:meal_payment_culculator/person.dart';
 
 class SummryPage extends StatefulWidget {
+  static String SUMMRY_PAGE_ROUTE_NAME = '/summry';
+
   @override
   _SummryPageState createState() => _SummryPageState();
 }
@@ -10,15 +12,28 @@ class SummryPage extends StatefulWidget {
 class _SummryPageState extends State<SummryPage> {
   TextEditingController tECTipPersentage = TextEditingController();
 
+  double tip = 0;
+
   @override
   void initState() {
     super.initState();
     tECTipPersentage.text = 10.toString();
+    _setTip();
+  }
+
+  void _setTip(){
+    String tipText = tECTipPersentage.text.trim();
+    tip = double.tryParse(tipText);
+    if(tip == null){
+      tip = 0.0;
+    }
+    tip /= 100;
   }
 
   @override
   Widget build(BuildContext context) {
     List<Person> _diners = (ModalRoute.of(context).settings.arguments as Map)['diners'];
+    double fullPrice = (ModalRoute.of(context).settings.arguments as Map)['full price'];
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +61,7 @@ class _SummryPageState extends State<SummryPage> {
               ),
               onChanged: (value) {
                 setState(() {
-                  
+                  _setTip();
                 });
               },
             ),
@@ -56,13 +71,7 @@ class _SummryPageState extends State<SummryPage> {
               shrinkWrap: true,
               itemCount: _diners.length,
               itemBuilder: (context, i){
-                final diner = _diners[i];
-                String tipText = tECTipPersentage.text.trim();
-                double tip = double.tryParse(tipText);
-                if(tip == null){
-                  tip = 0.0;
-                }
-                tip /= 100;
+                final diner = _diners[i];                
                 return ListTile(
                   leading: Container(
                     width: 80,
@@ -75,6 +84,15 @@ class _SummryPageState extends State<SummryPage> {
                   ),),
                 );
               }
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text('full payment with tip: ${fullPrice + tip}', style: TextStyle(
+                fontSize: 25,
+              ),),
             ),
           ),
         ],

@@ -4,9 +4,12 @@ import 'package:meal_payment_culculator/database_helper.dart';
 import 'package:meal_payment_culculator/dialogs/choose_group_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
 import 'package:meal_payment_culculator/diner_row.dart';
+import 'package:meal_payment_culculator/pages/meals_page.dart';
 import 'package:meal_payment_culculator/person.dart';
 
 class PersonsPage extends StatefulWidget {
+  static String PERSONS_PAGE_ROUTE_NAME = '/persons';
+
   @override
   _PersonsPageState createState() => _PersonsPageState();
 }
@@ -233,7 +236,7 @@ class _PersonsPageState extends State<PersonsPage> {
               alignment: Alignment.bottomRight,
               child: RaisedButton(
                 onPressed: _diners.isEmpty? null : () {
-                  Navigator.pushNamed(context, '/meals', arguments: {
+                  Navigator.pushNamed(context, MealsPage.MEAL_PAGE_ROUTE_NAME, arguments: {
                     'diners': _diners
                   });
                 },
