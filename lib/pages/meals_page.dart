@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meal_payment_culculator/dialogs/discount_dialog.dart';
+import 'package:meal_payment_culculator/discount.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
 import 'package:meal_payment_culculator/pages/summry_page.dart';
@@ -16,12 +18,12 @@ class MealsPage extends StatefulWidget {
 class MealsPageState extends State<MealsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-
   final tECMealsName = TextEditingController();
   final tECMealsPrice = TextEditingController();
 
   List<Person> _diners;
   List<Meal> _meals = <Meal>[];
+  Discount _discount = Discount(type: DiscountType.AMOUNT, amount: 0);
 
   @override
   void initState() {
@@ -36,6 +38,16 @@ class MealsPageState extends State<MealsPage> {
     return payment;
   }
 
+  List<Person> _getPayingDiners(){
+    List<Person> list = <Person>[];
+    for (Person diner in _diners) {
+      if(diner.payment != 0){
+        list.add(diner);
+      }
+    }
+    return list;
+  }
+
   @override
   Widget build(BuildContext context) {
     _diners = (ModalRoute.of(context).settings.arguments as Map)['diners'];
@@ -43,17 +55,48 @@ class MealsPageState extends State<MealsPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Meals'),
+        actions: [
+          FlatButton(
+            textColor: Colors.white,
+            child: Text('Add discount'),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => DiscountDialog(),
+              ).then((value) { 
+                if(value != null){
+                  print(value);
+                  setState(() {
+                    _discount = value;
+                  });
+                }
+              });
+            },
+          )
+        ],
       ),
       body: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Text('full payment: ${_getFullPayment()}', style: TextStyle(
-                fontSize: 25,
-              ),),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Visibility(
+                visible: _discount != null,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('discount: ${_discount.getDiscountAmount(_getFullPayment())}'),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Text('full payment: ${_discount.getPriceAfterDiscount(_getFullPayment())}', style: TextStyle(
+                    fontSize: 25,
+                  ),),
+                ),
+              ),
+            ],
           ),
           Flexible(
             child: ListView(
@@ -138,7 +181,7 @@ class MealsPageState extends State<MealsPage> {
                   fontSize: 22
                 ),),
                 onPressed: _meals.isEmpty? null : (){
-                  double personPayment = _getFullPayment() / _diners.length.toDouble();
+                  double personPayment = _discount.getPriceAfterDiscount(_getFullPayment()) / _diners.length.toDouble();
                   _diners.forEach((element) {
                     element.resetPayment();
                     element.addPayment(personPayment);
@@ -146,9 +189,9 @@ class MealsPageState extends State<MealsPage> {
 
                   Navigator.pushNamed(context, SummryPage.SUMMRY_PAGE_ROUTE_NAME, arguments: {
                     'diners': _diners,
-                    'full price': _getFullPayment()
+                    'full price': _discount.getPriceAfterDiscount(_getFullPayment())
                   });
-                },
+                }, 
               ),
               RaisedButton(
                 onPressed: _meals.isEmpty? null : () {
@@ -167,9 +210,17 @@ class MealsPageState extends State<MealsPage> {
                   _diners.forEach((element) {element.resetPayment();});
                   _meals.forEach((element) {element.addMealPriceToEatersPayment();});
 
+                  final payingList = _getPayingDiners();
+
+                  double personalDiscountAmount = _discount.getDiscountAmount(_getFullPayment()) / payingList.length;
+
+                  payingList.forEach((element) {
+                    element.removePayment(personalDiscountAmount);
+                  });
+
                   Navigator.pushNamed(context, SummryPage.SUMMRY_PAGE_ROUTE_NAME, arguments: {
                     'diners': _diners,
-                    'full price': _getFullPayment()
+                    'full price': _discount.getPriceAfterDiscount(_getFullPayment())
                   });
                 },
                 child: Text('Next', style: TextStyle(

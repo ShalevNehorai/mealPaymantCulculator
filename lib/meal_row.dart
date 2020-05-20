@@ -54,7 +54,10 @@ class _MealRowState extends State<MealRow> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Icon(this.expended? Icons.arrow_drop_down : Icons.arrow_drop_up),
+            Visibility(
+              visible: widget.meal.extras.isNotEmpty,
+              child: Icon(this.expended? Icons.arrow_drop_down : Icons.arrow_drop_up)
+            ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0),
               constraints: BoxConstraints(minWidth: 90, maxWidth: 90),
@@ -79,6 +82,7 @@ class _MealRowState extends State<MealRow> {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: ToggleButtons(
+                  renderBorder: true,
                   children: widget.toggleButtonList,
                   isSelected: widget.isSelected,
                   onPressed: (index) {

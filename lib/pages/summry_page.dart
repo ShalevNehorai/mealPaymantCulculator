@@ -90,7 +90,7 @@ class _SummryPageState extends State<SummryPage> {
             padding: const EdgeInsets.all(16.0),
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text('full payment with tip: ${fullPrice + tip}', style: TextStyle(
+              child: Text('full payment with tip: ${fullPrice + tip * fullPrice}', style: TextStyle(
                 fontSize: 25,
               ),),
             ),
