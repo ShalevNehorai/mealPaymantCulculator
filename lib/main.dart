@@ -369,6 +369,7 @@ class AppState extends State<Home>{
       ), 
     );*/
     return MaterialApp(
+      debugShowCheckedModeBanner: true,
       navigatorKey: navigatorKey,
       initialRoute: PersonsPage.PERSONS_PAGE_ROUTE_NAME,
       routes: {

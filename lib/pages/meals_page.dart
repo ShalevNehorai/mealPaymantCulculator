@@ -48,6 +48,13 @@ class MealsPageState extends State<MealsPage> {
     return list;
   }
 
+  void _openSummryPage(){
+    Navigator.pushNamed(context, SummryPage.SUMMRY_PAGE_ROUTE_NAME, arguments: {
+      'diners': _diners,
+      'full price': _discount.getPriceAfterDiscount(_getFullPayment())
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     _diners = (ModalRoute.of(context).settings.arguments as Map)['diners'];
@@ -56,6 +63,15 @@ class MealsPageState extends State<MealsPage> {
       appBar: AppBar(
         title: Text('Meals'),
         actions: [
+          FlatButton(
+            textColor: Colors.white,
+            child: Text('Clear discount'),
+            onPressed: () {
+              setState(() {
+                _discount.amount = 0;
+              });
+            },
+          ),
           FlatButton(
             textColor: Colors.white,
             child: Text('Add discount'),
@@ -84,14 +100,14 @@ class MealsPageState extends State<MealsPage> {
                 visible: _discount != null,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('discount: ${_discount.getDiscountAmount(_getFullPayment())}'),
+                  child: Text('discount: ${_discount.getDiscountAmount(_getFullPayment()).toStringAsFixed(2)}'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text('full payment: ${_discount.getPriceAfterDiscount(_getFullPayment())}', style: TextStyle(
+                  child: Text('full payment: ${_discount.getPriceAfterDiscount(_getFullPayment()).toStringAsFixed(2)}', style: TextStyle(
                     fontSize: 25,
                   ),),
                 ),
@@ -187,14 +203,17 @@ class MealsPageState extends State<MealsPage> {
                     element.addPayment(personPayment);
                   });
 
-                  Navigator.pushNamed(context, SummryPage.SUMMRY_PAGE_ROUTE_NAME, arguments: {
-                    'diners': _diners,
-                    'full price': _discount.getPriceAfterDiscount(_getFullPayment())
-                  });
+                  _openSummryPage();
                 }, 
               ),
               RaisedButton(
                 onPressed: _meals.isEmpty? null : () {
+                  if(_discount.getPriceAfterDiscount(_getFullPayment()) <= 0){
+                    _diners.forEach((element) {element.resetPayment();});
+                    _openSummryPage();
+                    return;
+                  }
+                  
                   for (Meal meal in _meals) {
                     if(meal.isEatersEmpty()){
                       _scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -210,7 +229,7 @@ class MealsPageState extends State<MealsPage> {
                   _diners.forEach((element) {element.resetPayment();});
                   _meals.forEach((element) {element.addMealPriceToEatersPayment();});
 
-                  final payingList = _getPayingDiners();
+                  List<Person> payingList = _getPayingDiners();
 
                   double personalDiscountAmount = _discount.getDiscountAmount(_getFullPayment()) / payingList.length;
 
@@ -218,10 +237,32 @@ class MealsPageState extends State<MealsPage> {
                     element.removePayment(personalDiscountAmount);
                   });
 
-                  Navigator.pushNamed(context, SummryPage.SUMMRY_PAGE_ROUTE_NAME, arguments: {
-                    'diners': _diners,
-                    'full price': _discount.getPriceAfterDiscount(_getFullPayment())
+                  double remainDiscount = 0;
+                  payingList.forEach((element) {
+                    if(element.payment < 0){
+                      remainDiscount += element.payment;
+                      element.resetPayment();
+                    }
                   });
+
+                  while (remainDiscount != 0) {
+                    payingList = _getPayingDiners();
+
+                    payingList.forEach((element) {
+                      element.removePayment(-remainDiscount / payingList.length);
+                    });
+
+                    remainDiscount = 0;
+                    payingList.forEach((element) {
+                      if(element.payment < 0){
+                        remainDiscount += element.payment;
+                        element.resetPayment();
+                        payingList.remove(element);
+                      }
+                    });
+                  }
+
+                  _openSummryPage();
                 },
                 child: Text('Next', style: TextStyle(
                   fontSize: 22

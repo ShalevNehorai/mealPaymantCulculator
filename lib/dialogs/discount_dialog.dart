@@ -71,7 +71,7 @@ class _DiscountDialogState extends State<DiscountDialog> {
               ),
               keyboardType: TextInputType.numberWithOptions(decimal: true),
               inputFormatters: <TextInputFormatter>[
-                BlacklistingTextInputFormatter(new RegExp('[\\ |\\,]')),
+                BlacklistingTextInputFormatter(new RegExp('[\\ |\\, |\\-]')),
               ],
             ),
           ),
