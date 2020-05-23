@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
 import 'package:meal_payment_culculator/dialogs/choose_group_dialog.dart';
@@ -178,18 +179,29 @@ class _PersonsPageState extends State<PersonsPage> {
                           autofocus: false,
                           focusNode: focusNode,
                           controller: tECDinerName,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.clear, size: 18,),
+                              onPressed: () => tECDinerName.clear(),
+                            ),
+                            hintText: 'Enter person name'
+                          ),
+                          inputFormatters: <TextInputFormatter>[
+                            BlacklistingTextInputFormatter(new RegExp('[\\|]')),
+                          ],
+                          onChanged: (value) => setState((){}),
                         ),
                       ),
                     ),
                     Flexible(
                       flex: 1,
-                      child: OutlineButton(
-                        splashColor: Colors.cyan,
+                      child: RaisedButton(
+                        // splashColor: Colors.cyan,
                         child: Icon(
                           Icons.person_add,
                           color: Colors.grey[600],
                         ),
-                        onPressed: () {
+                        onPressed: tECDinerName.text.trim().isEmpty? null : () {
                           String name = tECDinerName.text.trim();
                           if (name.isNotEmpty) {
                             if(!isPersonExists(name)){
@@ -200,7 +212,7 @@ class _PersonsPageState extends State<PersonsPage> {
                             }
                             else{
                               _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                content: Text('name already exists', style: TextStyle(
+                                content: Text('Name already exists', style: TextStyle(
                                   fontSize: 25.0,
                                 ),),
                               ));
@@ -208,7 +220,7 @@ class _PersonsPageState extends State<PersonsPage> {
                           }
                           else{
                             _scaffoldKey.currentState.showSnackBar(SnackBar(
-                              content: Text('the name is empty', style: TextStyle(
+                              content: Text('The name is empty', style: TextStyle(
                                 fontSize: 25.0,
                               ),),
                             ));

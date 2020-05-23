@@ -6,6 +6,7 @@ import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
 import 'package:meal_payment_culculator/pages/summry_page.dart';
 import 'package:meal_payment_culculator/person.dart';
+import 'package:number_inc_dec/number_inc_dec.dart';
 
 class MealsPage extends StatefulWidget {
 
@@ -20,6 +21,7 @@ class MealsPageState extends State<MealsPage> {
 
   final tECMealsName = TextEditingController();
   final tECMealsPrice = TextEditingController();
+  final tECMealAmount = TextEditingController();
 
   List<Person> _diners;
   List<Meal> _meals = <Meal>[];
@@ -138,22 +140,56 @@ class MealsPageState extends State<MealsPage> {
                   child: Row(
                     children: <Widget>[
                       Flexible(
-                        flex: 4,
+                        flex: 5,
                         child: TextField(
                           controller: tECMealsName,
+                          decoration: InputDecoration(
+                            hintText: 'Meal name',
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.clear, size: 18,),
+                              onPressed: () => tECMealsName.clear(),
+                            ),
+                          ),
                         ),
                       ),
                       Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
                       Flexible(
-                        flex: 2,
+                        flex: 3,
                         child: TextField(
                           controller: tECMealsPrice,
                           keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            hintText: 'Price',
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.clear, size: 18,),
+                              onPressed: () => tECMealsPrice.clear(),
+                            ),
+                          ),
                           inputFormatters: <TextInputFormatter>[
                             BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
                           ],
                         ),
                       ),
+                      Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
+                      Flexible(
+                        flex: 2,
+                        child: SizedBox(
+                          height: 55,
+                          child: NumberInputWithIncrementDecrement(
+                            controller: tECMealAmount,
+                            min: 1,
+                            initialValue: 1,
+                            isInt: true,
+                            widgetContainerDecoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5.0),
+                              border: Border.all(
+                                color: Colors.blueGrey,
+                                width: 0.75,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -168,16 +204,23 @@ class MealsPageState extends State<MealsPage> {
                     onPressed: () {
                       String name = tECMealsName.text.trim();
                       String price = tECMealsPrice.text.trim();
-                      if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null) {
+                      String amount = tECMealAmount.text.trim();
+                      if(amount.isEmpty){
+                        amount = 1.toString();
+                      }
+                      if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null && amount.isNotEmpty) {
                         setState(() {
-                          _meals.add(new Meal(name, double.parse(price)));
+                          for (int i = 0; i < int.parse(amount); i++) {
+                            _meals.add(new Meal(name, double.parse(price))); 
+                          }
                           tECMealsName.clear();
                           tECMealsPrice.clear();
+                          tECMealAmount.text = 1.toString();
                         });
                       }
                       else{
                         _scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text('the name or price is empty', style: TextStyle(
+                          content: Text('The name or price is empty ', style: TextStyle(
                             fontSize: 22
                           ),),
                         ));
