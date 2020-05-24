@@ -163,7 +163,7 @@ class _PersonsPageState extends State<PersonsPage> {
                       },
                       delete: (){
                         setState(() {
-                          _diners.removeAt(i);
+                          _diners.remove(diner);
                         });
                       },
                     );
@@ -196,7 +196,6 @@ class _PersonsPageState extends State<PersonsPage> {
                     Flexible(
                       flex: 1,
                       child: RaisedButton(
-                        // splashColor: Colors.cyan,
                         child: Icon(
                           Icons.person_add,
                           color: Colors.grey[600],

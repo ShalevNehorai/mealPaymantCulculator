@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal_payment_culculator/dialogs/add_extra_dialog.dart';
+import 'package:meal_payment_culculator/dialogs/choose_eaters_dialog.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/pages/meals_page.dart';
 import 'package:meal_payment_culculator/person.dart';
@@ -10,20 +11,8 @@ class MealRow extends StatefulWidget {
   final List<Person> diners;
   final Function delete;
 
-  var isSelected = List<bool>();
-  var toggleButtonList;
-
   MealRow({@required this.meal,@required this.diners,@required this.delete}){
-    generateSelectedList();
-
-    toggleButtonList = diners.map((diner) => ToggleButtonWidget(diner.name, horizontalPadding: 12.0,)).toList();
-    toggleButtonList.insert(0, ToggleButtonWidget('ALL'));
-  }
-
-  void generateSelectedList(){
-    isSelected = List.generate(diners.length, (index) => meal.haveEater(diners[index]));
-    bool isAllSelected = !isSelected.contains(false);
-    isSelected.insert(0, isAllSelected);
+    
   }
 
   @override
@@ -37,6 +26,7 @@ class _MealRowState extends State<MealRow> {
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
+      subtitle: Center(child: Text(widget.meal.eatersString())),
       onExpansionChanged: (value) {
         setState(() {
           _expended = !_expended;
@@ -56,10 +46,6 @@ class _MealRowState extends State<MealRow> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              /*Visibility(
-                visible: widget.meal.extras.isNotEmpty,
-                child: Icon(!this._expended? Icons.arrow_drop_down : Icons.arrow_drop_up)
-              ),*/
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.0),
                 constraints: BoxConstraints(minWidth: 90, maxWidth: 90),
@@ -81,36 +67,16 @@ class _MealRowState extends State<MealRow> {
               ),
               Flexible(
                 fit: FlexFit.loose,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: ToggleButtons(
-                    renderBorder: true,
-                    children: widget.toggleButtonList,
-                    isSelected: widget.isSelected,
-                    onPressed: (index) {
-                      setState(() {
-                        bool selected = !widget.isSelected[index];
-                        if(index == 0){// all button is pressed
-                          if(selected){
-                            widget.meal.addEaters(widget.diners);
-                          }
-                          else{
-                            widget.meal.removeEaters(widget.diners);
-                          }
-                        }
-                        else{// other diner is selected
-                          if(selected){
-                            widget.meal.addEater(widget.diners[index - 1]);
-                          }
-                          else{
-                            widget.meal.removeEater(widget.diners[index - 1]);
-                          }
-                        }
-                        widget.generateSelectedList();
-                        widget.meal.printEaters();
-                      });
-                    },
-                  ),
+                child: RaisedButton(
+                  child: Text('choose eaters'),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return ChooseEatersDialog(meal: widget.meal, diners: widget.diners,);
+                      },
+                    ).then((value) => setState((){}));
+                  },
                 ),
               ),
               IconButton(

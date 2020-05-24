@@ -43,17 +43,23 @@ class AddExtraDialog extends StatelessWidget {
                     flex: 4,
                     child: TextField(
                       controller: tECExtraName,
+                      decoration: InputDecoration(
+                        labelText: 'Name'
+                      ),
                     ),
                   ),
                   Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
                   Flexible(
                     flex: 2,
                     child: TextField(
-                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       controller: tECExtraPrice,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: <TextInputFormatter>[
                         BlacklistingTextInputFormatter(new RegExp('[\\ |\\,]')),
                       ],
+                      decoration: InputDecoration(
+                        labelText: 'Price'
+                      ),
                     ),
                   ),
                 ],

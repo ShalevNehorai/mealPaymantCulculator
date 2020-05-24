@@ -96,9 +96,13 @@ class Meal{
   }
 
   String eatersString(){
+    if(_eaters.isEmpty)
+      return '';
+      
     String msg = '';
     _eaters.forEach((element) {msg += ' ${element.name}, ';});
-    return msg;
+    
+    return msg.replaceRange(msg.length-2, null, '');
   }
 
   void printEaters(){
