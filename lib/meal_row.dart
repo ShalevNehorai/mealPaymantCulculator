@@ -32,105 +32,108 @@ class MealRow extends StatefulWidget {
 
 class _MealRowState extends State<MealRow> {
 
-  bool expended = false;
-
+  bool _expended = false;
+  
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
       onExpansionChanged: (value) {
         setState(() {
-          expended = !expended;
+          _expended = !_expended;
         });
       },
-      initiallyExpanded: expended,
-      trailing: SizedBox(height: 0.0,),
+      initiallyExpanded: _expended,
       title: Container(
         /*decoration: BoxDecoration(
           border: Border.all(),
         ),*/
         margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Visibility(
-              visible: widget.meal.extras.isNotEmpty,
-              child: Icon(this.expended? Icons.arrow_drop_down : Icons.arrow_drop_up)
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),
-              constraints: BoxConstraints(minWidth: 90, maxWidth: 90),
-              child: Column(
-                children: <Widget>[
-                  Text(widget.meal.name, style: TextStyle(
-                    fontSize: 20.0,
-                  ),),
-                  SizedBox(height: 4.0,),
-                  Text(widget.meal.fullPrice.toString(), style: TextStyle(
-                    fontSize: 18.0,
-                  ),),
-                  SizedBox(height: 2.0,),
-                  Text('(${widget.meal.rawPrice})', style: TextStyle(
-                    fontSize: 12.0,
-                  ),)
-                ],
-              ),
-            ),
-            Flexible(
-              fit: FlexFit.loose,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: ToggleButtons(
-                  renderBorder: true,
-                  children: widget.toggleButtonList,
-                  isSelected: widget.isSelected,
-                  onPressed: (index) {
-                    setState(() {
-                      bool selected = !widget.isSelected[index];
-                      if(index == 0){// all button is pressed
-                        if(selected){
-                          widget.meal.addEaters(widget.diners);
-                        }
-                        else{
-                          widget.meal.removeEaters(widget.diners);
-                        }
-                      } 
-                      else{// other diner is selected
-                        if(selected){
-                          widget.meal.addEater(widget.diners[index - 1]);
-                        }
-                        else{
-                          widget.meal.removeEater(widget.diners[index - 1]);
-                        }
-                      }
-                      widget.generateSelectedList();
-                      widget.meal.printEaters();
-                    });
-                  },
+        child: Directionality(
+          textDirection: TextDirection.ltr,//TODO chack what is better
+          // TextDirection.rtl,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              /*Visibility(
+                visible: widget.meal.extras.isNotEmpty,
+                child: Icon(!this._expended? Icons.arrow_drop_down : Icons.arrow_drop_up)
+              ),*/
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                constraints: BoxConstraints(minWidth: 90, maxWidth: 90),
+                child: Column(
+                  children: <Widget>[
+                    Text(widget.meal.name, style: TextStyle(
+                      fontSize: 20.0,
+                    ),),
+                    SizedBox(height: 4.0,),
+                    Text(widget.meal.fullPrice.toString(), style: TextStyle(
+                      fontSize: 18.0,
+                    ),),
+                    SizedBox(height: 2.0,),
+                    Text('(${widget.meal.rawPrice})', style: TextStyle(
+                      fontSize: 12.0,
+                    ),)
+                  ],
                 ),
               ),
-            ),
-            IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 0.0),
-              icon: Icon(Icons.add),
-              onPressed: () {
-                showDialog(
-                  context: context, 
-                  barrierDismissible: true,
-                  builder: (context) => AddExtraDialog(meal: widget.meal),
-                ).then((value) {
-                    context.findAncestorStateOfType<MealsPageState>().setState(() { });
-                  }
-                );
-              },
-            ),
-            IconButton(
-              padding: EdgeInsets.symmetric(horizontal: 0.0),
-              icon: Icon(Icons.delete, color: Colors.red[600],),
-              onPressed: widget.delete,
-            ),
-          ],
+              Flexible(
+                fit: FlexFit.loose,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: ToggleButtons(
+                    renderBorder: true,
+                    children: widget.toggleButtonList,
+                    isSelected: widget.isSelected,
+                    onPressed: (index) {
+                      setState(() {
+                        bool selected = !widget.isSelected[index];
+                        if(index == 0){// all button is pressed
+                          if(selected){
+                            widget.meal.addEaters(widget.diners);
+                          }
+                          else{
+                            widget.meal.removeEaters(widget.diners);
+                          }
+                        }
+                        else{// other diner is selected
+                          if(selected){
+                            widget.meal.addEater(widget.diners[index - 1]);
+                          }
+                          else{
+                            widget.meal.removeEater(widget.diners[index - 1]);
+                          }
+                        }
+                        widget.generateSelectedList();
+                        widget.meal.printEaters();
+                      });
+                    },
+                  ),
+                ),
+              ),
+              IconButton(
+                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  showDialog(
+                    context: context, 
+                    barrierDismissible: true,
+                    builder: (context) => AddExtraDialog(meal: widget.meal),
+                  ).then((value) {
+                      context.findAncestorStateOfType<MealsPageState>().setState(() { });
+                    }
+                  );
+                },
+              ),
+              IconButton(
+                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                icon: Icon(Icons.delete, color: Colors.red[600],),
+                onPressed: widget.delete,
+              ),
+            ],
+          ),
         ),
       ),
       children: widget.meal.extras.map((extra) => ExtraRow(mealExtra: extra, delete: (){

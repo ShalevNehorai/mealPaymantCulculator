@@ -95,9 +95,15 @@ class Meal{
     return 'name: $name, price: $rawPrice';
   }
 
+  String eatersString(){
+    String msg = '';
+    _eaters.forEach((element) {msg += ' ${element.name}, ';});
+    return msg;
+  }
+
   void printEaters(){
     String msg = '$name [';
-    _eaters.forEach((element) {msg += ' ${element.name}, ';});
+    msg += eatersString();
     msg += ']';
     print(msg);
   }
