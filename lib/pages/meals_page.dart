@@ -99,7 +99,7 @@ class MealsPageState extends State<MealsPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Visibility(
-                visible: _discount != null,
+                visible: _discount.amount != 0,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text('discount: ${_discount.getDiscountAmount(_getFullPayment()).toStringAsFixed(2)}'),
