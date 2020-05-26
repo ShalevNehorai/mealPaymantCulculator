@@ -99,16 +99,16 @@ class _DiscountDialogState extends State<DiscountDialog> {
                     double amount = 0;
                     String validateMsg;
                     if(amountStr.isEmpty){
-                      validateMsg = 'Enter dicount amount';
+                      validateMsg = 'Enter discount amount';
                     }
                     else if(num.tryParse(amountStr) == null){
-                      validateMsg = 'Enter dicount as number';
+                      validateMsg = 'Enter discount as number';
                     }
                     else {
                       amount = double.parse(amountStr);
                       if(type == DiscountType.PERSANTAGE){
                         if(amount > 100){
-                          validateMsg = 'dicount in persent cant be more than 100';
+                          validateMsg = 'discount in persent cant be more than 100';
                         }
                       }
                     }

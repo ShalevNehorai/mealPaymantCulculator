@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meal_payment_culculator/dialogs/add_extra_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/choose_eaters_dialog.dart';
+import 'package:meal_payment_culculator/dialogs/edit_meal_dialog.dart';
+import 'package:meal_payment_culculator/dialogs/meal_discount_dialog.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/pages/meals_page.dart';
 import 'package:meal_payment_culculator/person.dart';
@@ -11,9 +13,7 @@ class MealRow extends StatefulWidget {
   final List<Person> diners;
   final Function delete;
 
-  MealRow({@required this.meal,@required this.diners,@required this.delete}){
-    
-  }
+  MealRow({@required this.meal, @required this.diners, @required this.delete});
 
   @override
   _MealRowState createState() => _MealRowState();
@@ -21,22 +21,38 @@ class MealRow extends StatefulWidget {
 
 class _MealRowState extends State<MealRow> {
 
-  bool _expended = false;
+  List<Widget> expendedRows = <Widget>[];
   
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      subtitle: Center(child: Text(widget.meal.eatersString())),
-      onExpansionChanged: (value) {
+    expendedRows = widget.meal.extras.map((extra) => ExtraRow(mealExtra: extra, delete: (){
         setState(() {
-          _expended = !_expended;
+          widget.meal.removeExtra(extra);
         });
-      },
-      initiallyExpanded: _expended,
+      },)).toList();
+
+    if(!widget.meal.discount.isEmpty()){
+      expendedRows.insert(0, ExtraRow (
+        mealExtra: MealExtra('Discount', -widget.meal.discountAmount),
+        delete: (){
+          setState(() {
+            widget.meal.clearDiscount();
+          });
+        },
+      ));
+    }
+
+    return ExpansionTile(
+      trailing: widget.meal.extras.isEmpty && widget.meal.discount.isEmpty()? Container(width: 0,) : null,
+      subtitle: Padding(
+          padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
+          child: Text(widget.meal.eatersString(), style: TextStyle(
+            fontSize: 16,
+            color: Colors.black
+          ),),
+        ),
+      initiallyExpanded: false,
       title: Container(
-        /*decoration: BoxDecoration(
-          border: Border.all(),
-        ),*/
         margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
         padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
         child: Directionality(
@@ -53,14 +69,17 @@ class _MealRowState extends State<MealRow> {
                   children: <Widget>[
                     Text(widget.meal.name, style: TextStyle(
                       fontSize: 20.0,
+                      color: Colors.black
                     ),),
                     SizedBox(height: 4.0,),
                     Text(widget.meal.fullPrice.toString(), style: TextStyle(
                       fontSize: 18.0,
+                      color: Colors.black
                     ),),
                     SizedBox(height: 2.0,),
                     Text('(${widget.meal.rawPrice})', style: TextStyle(
                       fontSize: 12.0,
+                      color: Colors.black
                     ),)
                   ],
                 ),
@@ -79,7 +98,73 @@ class _MealRowState extends State<MealRow> {
                   },
                 ),
               ),
-              IconButton(
+              PopupMenuButton(
+                onSelected: (value) {
+                  if(value != null){
+                    try {
+                      value();
+                    } catch (e) {
+                    }
+                  }
+                },
+                elevation: 3,
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(
+                      enabled: true,
+                      height: 2.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Add extra'),
+                      ),
+                      value: (){  
+                        showDialog(
+                          context: context, 
+                          barrierDismissible: true,
+                          builder: (context) => AddExtraDialog(meal: widget.meal),
+                        ).then((value) => context.findAncestorStateOfType<MealsPageState>().setState(() { }));
+                      },
+                    ),
+                    PopupMenuItem(
+                      enabled: true,
+                      height: 2.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Add discount'),
+                      ),
+                      value: (){
+                        showDialog(
+                          context: context,
+                          builder: (context) => MealDiscountDialog(meal:widget.meal,),
+                        ).then((value) => context.findAncestorStateOfType<MealsPageState>().setState(() { }));
+                      },
+                    ),
+                    PopupMenuItem(
+                      enabled: true,
+                      height: 2.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Edit'),
+                      ),
+                      value: (){
+                        showDialog(context: context,
+                          builder: (context) => EditMealDialog(meal: widget.meal,),
+                        ).then((value) => setState((){}));
+                      },
+                    ),
+                    PopupMenuItem(
+                      enabled: true,
+                      height: 2.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Delete'),
+                      ),
+                      value: widget.delete,
+                    ),
+                  ];
+                },
+              ),
+              /*IconButton(
                 padding: EdgeInsets.symmetric(horizontal: 0.0),
                 icon: Icon(Icons.add),
                 onPressed: () {
@@ -97,16 +182,12 @@ class _MealRowState extends State<MealRow> {
                 padding: EdgeInsets.symmetric(horizontal: 0.0),
                 icon: Icon(Icons.delete, color: Colors.red[600],),
                 onPressed: widget.delete,
-              ),
+              ),*/
             ],
           ),
         ),
       ),
-      children: widget.meal.extras.map((extra) => ExtraRow(mealExtra: extra, delete: (){
-        setState(() {
-          widget.meal.removeExtra(extra);
-        });
-      },)).toList()
+      children: expendedRows
     );
   }
 }
@@ -131,22 +212,6 @@ class ExtraRow extends StatelessWidget {
           onPressed: delete,
         ),
       ],
-    );
-  }
-}
-
-class ToggleButtonWidget extends StatelessWidget {
-
-  final String text;
-  final double horizontalPadding; 
-
-  ToggleButtonWidget(this.text,{ this.horizontalPadding = 0.0});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding , vertical: 0.0),
-      child: Text(text),
     );
   }
 }

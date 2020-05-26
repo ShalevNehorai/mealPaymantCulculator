@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
+import 'package:meal_payment_culculator/dialogs/confirmation_dialog.dart';
 
 class ChooseGroupDialog extends StatefulWidget {
   @override
@@ -22,23 +23,9 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
     showDialog(
       context: context, 
       builder: (context) {
-        return AlertDialog(
-          title: Text('are you sure you want to delete ${groupModel.name}?', style: TextStyle(
-            fontSize: 22.0,
-          ),),
-          content: Text('this will remove the group ${groupModel.name} from the list'),
-          actions: <Widget>[
-            RaisedButton(
-              child: Text('CANCLE'),
-              color: Colors.red[200],
-              onPressed: () => Navigator.of(context).pop(false),
-            ),
-            RaisedButton(
-              child: Text('DELETE'),
-              color: Colors.blue[300],
-              onPressed: () => Navigator.of(context).pop(true),
-            )
-          ],
+        return ConfirmationDialog(
+          title: 'are you sure you want to delete ${groupModel.name}?',
+          content: 'this will remove the group ${groupModel.name} from the list',
         );
       },
     ).then((value) async{

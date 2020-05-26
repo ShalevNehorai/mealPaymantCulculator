@@ -21,6 +21,10 @@ class Discount {
     return discount;
   } 
 
+  bool isEmpty(){
+    return amount == 0;
+  }
+
   @override
   String toString() {
     return 'discount type: $type, amount $amount';

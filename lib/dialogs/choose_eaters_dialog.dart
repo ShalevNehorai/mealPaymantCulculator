@@ -40,18 +40,18 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
   }
 
   void filterSearchResults(String query) {
-  filterdDiners.clear();
-  if(query.isNotEmpty){
-    widget.diners.forEach((diner) {
-      if(diner.name.contains(query)){
-        filterdDiners.add(diner);
-      }
-    });
-  } else {
-    filterdDiners.addAll(widget.diners);
+    filterdDiners.clear();
+    if(query.isNotEmpty){
+      widget.diners.forEach((diner) {
+        if(diner.name.contains(query)){
+          filterdDiners.add(diner);
+        }
+      });
+    } else {
+      filterdDiners.addAll(widget.diners);
+    }
+    setState(() { });
   }
-  setState(() { });
-}
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +74,7 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
                 ),
               ),
             ),
-           Padding(
+            Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 onChanged: (value) {
