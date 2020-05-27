@@ -1,3 +1,4 @@
+import 'package:meal_payment_culculator/discount.dart';
 import 'package:meal_payment_culculator/person.dart';
 
 class Meal{
@@ -5,6 +6,11 @@ class Meal{
   double _price;
   List<Person> _eaters = new List<Person>();
   List<MealExtra> _extras = new List<MealExtra>();
+
+  Discount discount = new Discount(amount: 0, type: DiscountType.AMOUNT);
+  bool dicountIncludExtras = false;
+
+  Meal(this._name, this._price);
 
   String get name{
     return _name;
@@ -18,11 +24,29 @@ class Meal{
     return _price;
   }
 
+  double get extrasPrice{
+    double price = 0;
+    _extras.forEach((extra) {
+      price += extra.price;
+    });
+    return price;
+  }
+
   double get fullPrice{
     double fullPrice = rawPrice;
-    _extras.forEach((extra) {
-      fullPrice += extra.price;
-    });
+    if(this.discount != null){
+      if(dicountIncludExtras){
+        fullPrice += extrasPrice;
+        fullPrice = discount.getPriceAfterDiscount(fullPrice);
+      }
+      else{
+        fullPrice = discount.getPriceAfterDiscount(fullPrice);
+        fullPrice += extrasPrice;
+      }
+    }
+    else{
+      fullPrice += extrasPrice;
+    }
     return fullPrice;
   }
 
@@ -30,11 +54,17 @@ class Meal{
     this._price = price;
   }
 
+  double get discountAmount{
+    double fullPrice = rawPrice;
+    if(dicountIncludExtras){
+      fullPrice += extrasPrice;
+    }
+    return discount.getDiscountAmount(fullPrice);
+  }
+
   List<MealExtra> get extras{
     return this._extras;
   }
-
-  Meal(this._name, this._price);
 
   void addEater(Person eater){
     if(!this._eaters.contains(eater)){
@@ -62,6 +92,10 @@ class Meal{
     return this._eaters.contains(eater);
   }
 
+  bool isEatersEmpty(){
+    return _eaters.isEmpty;
+  }
+
   void addExtra(MealExtra mealExtra){
     this._extras.add(mealExtra);
   }
@@ -86,14 +120,29 @@ class Meal{
     }
   }
 
+  void clearDiscount(){
+    this.discount.amount = 0;
+    this.dicountIncludExtras = false;
+  }
+
   @override
   String toString(){
     return 'name: $name, price: $rawPrice';
   }
 
+  String eatersString(){
+    if(_eaters.isEmpty)
+      return '';
+      
+    String msg = '';
+    _eaters.forEach((element) {msg += ' ${element.name}, ';});
+    
+    return msg.replaceRange(msg.length-2, null, '');
+  }
+
   void printEaters(){
     String msg = '$name [';
-    _eaters.forEach((element) {msg += ' ${element.name}, ';});
+    msg += eatersString();
     msg += ']';
     print(msg);
   }

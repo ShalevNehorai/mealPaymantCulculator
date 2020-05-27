@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class TextDiglod extends StatelessWidget {
+class TextInputDiglod extends StatelessWidget {
   final _textController = TextEditingController();
 
   final String title;
+  final String initialText;
   final Function validitiCheck;
 
-  // FormFieldValidator()
-
-  TextDiglod({@required this.title, this.validitiCheck});
+  TextInputDiglod({@required this.title, this.initialText, this.validitiCheck});
 
   @override
   Widget build(BuildContext context) {
+    if(initialText != null)
+      _textController.text = this.initialText;
+
     return Dialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
+        borderRadius: BorderRadius.circular(16.0),
       ),
       child: Container(
         padding: EdgeInsets.all(16.0),

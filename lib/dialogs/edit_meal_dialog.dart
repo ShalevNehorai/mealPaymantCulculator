@@ -3,17 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/meal.dart';
 
-class AddExtraDialog extends StatelessWidget {
-
+class EditMealDialog extends StatelessWidget {
   final Meal meal;
 
-  final tECExtraName = TextEditingController();
-  final tECExtraPrice = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
 
-  AddExtraDialog({@required this.meal});
-
-  void closeDialog(BuildContext context){
-    Navigator.of(context).pop();
+  EditMealDialog({this.meal}){
+    nameController.text = meal.name;
+    priceController.text = meal.rawPrice.toString();
   }
 
   @override
@@ -30,7 +28,7 @@ class AddExtraDialog extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: Text('add extra to ${meal.name}', style: TextStyle(
+              child: Text('Edit the meal', style: TextStyle(
                 fontSize: 26.0,
                 fontWeight: FontWeight.bold
               ),),
@@ -42,7 +40,7 @@ class AddExtraDialog extends StatelessWidget {
                   Flexible(
                     flex: 4,
                     child: TextField(
-                      controller: tECExtraName,
+                      controller: nameController,
                       decoration: InputDecoration(
                         labelText: 'Name'
                       ),
@@ -52,7 +50,7 @@ class AddExtraDialog extends StatelessWidget {
                   Flexible(
                     flex: 2,
                     child: TextField(
-                      controller: tECExtraPrice,
+                      controller: priceController,
                       keyboardType: TextInputType.numberWithOptions(decimal: true),
                       inputFormatters: <TextInputFormatter>[
                         BlacklistingTextInputFormatter(new RegExp('[\\ |\\,]')),
@@ -71,22 +69,23 @@ class AddExtraDialog extends StatelessWidget {
               children: <Widget>[
                 RaisedButton(
                   color: Colors.red[300],
-                  child: Text('cancel', style: TextStyle(
+                  child: Text('Cancel', style: TextStyle(
                     fontSize: 16.0
                   ),),
-                  onPressed: () => this.closeDialog(context)
+                  onPressed: () => Navigator.of(context).pop()
                 ),
                 RaisedButton(
                   color: Colors.blue[300],
-                  child: Text('add', style: TextStyle(
+                  child: Text('OK', style: TextStyle(
                     fontSize: 16.0
                   ),),
                   onPressed: () {
-                    String name = tECExtraName.text.trim();
-                    String price = tECExtraPrice.text.trim();
+                    String name = nameController.text.trim();
+                    String price = priceController.text.trim();
                     if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null) {
-                        meal.extras.add(new MealExtra(name, double.parse(price)));
-                        this.closeDialog(context);
+                        meal.name = name;
+                        meal.rawPrice = double.parse(price);
+                        Navigator.of(context).pop();
                     }
                     else{
                       Fluttertoast.showToast(
