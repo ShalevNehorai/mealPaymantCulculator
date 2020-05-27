@@ -187,7 +187,8 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
                   },
                 ),
               ],
-            )
+            ),
+            SizedBox(height: 10,)
           ],
         )
       ),

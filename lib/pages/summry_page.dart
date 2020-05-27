@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meal_payment_culculator/person.dart';
+import 'package:simple_search_bar/simple_search_bar.dart';
 
 class SummryPage extends StatefulWidget {
   static String SUMMRY_PAGE_ROUTE_NAME = '/summry';
@@ -10,7 +11,11 @@ class SummryPage extends StatefulWidget {
 }
 
 class _SummryPageState extends State<SummryPage> {
+  AppBarController appBarController = AppBarController();
   TextEditingController tECTipPersentage = TextEditingController();
+
+  List<Person> diners = null;
+  List<Person> filterdDiners = <Person>[];
 
   double tip = 0;
 
@@ -30,14 +35,59 @@ class _SummryPageState extends State<SummryPage> {
     tip /= 100;
   }
 
+  void filterSearchResults(String query) {
+
+    if(diners == null){
+      print('no diners');
+      return;
+    }
+
+    filterdDiners.clear();
+    if(query.isNotEmpty){
+      diners.forEach((diner) {
+        if(diner.name.contains(query)){
+          filterdDiners.add(diner);
+        }
+      });
+    } else {
+      filterdDiners.addAll(diners);
+    }
+    setState(() { });
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<Person> _diners = (ModalRoute.of(context).settings.arguments as Map)['diners'];
+    if(diners == null){
+      diners = (ModalRoute.of(context).settings.arguments as Map)['diners'];
+      filterdDiners.addAll(diners);
+    }
+
     double fullPrice = (ModalRoute.of(context).settings.arguments as Map)['full price'];
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('summry page'),
+      appBar: SearchAppBar(
+        primary: Theme.of(context).primaryColor, 
+        mainAppBar: AppBar(
+          title: Text("Summry page"),
+          actions: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: InkWell(
+                child: Icon(
+                  Icons.search,
+                ),
+                onTap: () {
+                  appBarController.stream.add(true);
+                },
+              ),
+            )
+          ],
+        ), 
+        appBarController: appBarController, 
+        onChange: (String value) {
+          filterSearchResults(value);
+          print(value);
+        },
       ),
       body: Column(
         children: [
@@ -69,9 +119,9 @@ class _SummryPageState extends State<SummryPage> {
           Flexible(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: _diners.length,
+              itemCount: filterdDiners.length,
               itemBuilder: (context, i){
-                final diner = _diners[i];                
+                final diner = filterdDiners[i];                
                 return ListTile(
                   leading: Container(
                     width: 80,

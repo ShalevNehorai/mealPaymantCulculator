@@ -28,6 +28,7 @@ dependencies:
   path_provider: ^1.0.0
   number_inc_dec: ^0.5.0
   searchable_dropdown:
+  simple_search_bar: 
 
 dev_dependencies:
   flutter_test:
