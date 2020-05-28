@@ -17,7 +17,7 @@ class PersonsPage extends StatefulWidget {
 
 class _PersonsPageState extends State<PersonsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  // final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
 
   FocusNode focusNode = FocusNode();
   final tECDinerName = TextEditingController();
@@ -92,83 +92,83 @@ class _PersonsPageState extends State<PersonsPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         title: Text('Persons'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: RaisedButton(
-                child: Icon(Icons.group_add),
-                onPressed: () async {
-                showDialog(
-                  context: context,
-                  builder: (context) => ChooseGroupDialog(),
-                ).then((value) {
-                    if(value != null){
-                      print(value);
-                      setState(() {
-                        for (var member in value.members) {
-                          Person diner = Person(member.toString());
-                          if(!isPersonExists(diner.name)){
-                            _diners.add(diner);
-                          }
-                        }
-                      });
+        actions: [
+          FlatButton(
+            child: Icon(Icons.group_add, color: Colors.white,),
+            onPressed: () async {
+            showDialog(
+              context: context,
+              builder: (context) => ChooseGroupDialog(),
+            ).then((value) {
+                if(value != null){
+                  print(value);
+                  setState(() {
+                    for (var member in value.members) {
+                      Person diner = Person(member.toString());
+                      if(!isPersonExists(diner.name)){
+                        _diners.add(diner);
+                      }
                     }
-                    focusNode.unfocus();
                   });
                 }
-              ),
+                focusNode.unfocus();
+              });
+            }
+          )  
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+              itemCount: _diners.length,
+              itemBuilder: (context, i){
+                final diner = _diners[i];
+                return DinerRow(
+                  diner: diner,
+                  editName: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return TextInputDiglod(
+                          title: 'Edit the name',
+                          initialText: diner.name,
+                          validitiCheck: (value){
+                            if(value.isEmpty){
+                              return 'please enter text';
+                            }
+                            if(isPersonExists(value) && value != diner.name){
+                              return 'name already exists';
+                            }
+                            return null;
+                          },
+                        );
+                      },
+                    ).then((value) {
+                      if(value != null){
+                        setState((){
+                          diner.name = value;
+                        });
+                      }
+                    });
+                  },
+                  delete: (){
+                    setState(() {
+                      _diners.remove(diner);
+                    });
+                  },
+                );
+              },
             ),
           ),
-          Flexible(
-            child: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: _diners.length,
-                  itemBuilder: (context, i){
-                    final diner = _diners[i];
-                    return DinerRow(
-                      diner: diner,
-                      editName: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return TextInputDiglod(
-                              title: 'Edit the name',
-                              initialText: diner.name,
-                              validitiCheck: (value){
-                                if(value.isEmpty){
-                                  return 'please enter text';
-                                }
-                                if(isPersonExists(value) && value != diner.name){
-                                  return 'name already exists';
-                                }
-                                return null;
-                              },
-                            );
-                          },
-                        ).then((value) {
-                          if(value != null){
-                            setState((){
-                              diner.name = value;
-                            });
-                          }
-                        });
-                      },
-                      delete: (){
-                        setState(() {
-                          _diners.remove(diner);
-                        });
-                      },
-                    );
-                  },
-                ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              children: [
                 Row(
                   children: <Widget>[
                     Flexible(
@@ -229,30 +229,36 @@ class _PersonsPageState extends State<PersonsPage> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: RaisedButton(
-                    onPressed: () {
-                      _saveCurrentGroup();
-                    },
-                    child: Text('save current party'),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: RaisedButton(
+                        onPressed: _diners.length < 2 ? null : () {
+                          _saveCurrentGroup();
+                        },
+                        child: Text('save current party'),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: RaisedButton(
+                          onPressed: _diners.isEmpty? null : () {
+                            Navigator.pushNamed(context, MealsPage.MEAL_PAGE_ROUTE_NAME, arguments: {
+                              'diners': _diners
+                            });
+                          },
+                          child: Text('Next'),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ]
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: RaisedButton(
-                onPressed: _diners.isEmpty? null : () {
-                  Navigator.pushNamed(context, MealsPage.MEAL_PAGE_ROUTE_NAME, arguments: {
-                    'diners': _diners
-                  });
-                },
-                child: Text('Next'),
-              ),
+                SizedBox(height: 10,)
+              ],
             ),
           ),
         ],
