@@ -6,8 +6,8 @@ import 'package:meal_payment_culculator/meal.dart';
 class EditMealDialog extends StatelessWidget {
   final Meal meal;
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController priceController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
 
   EditMealDialog({this.meal}){
     nameController.text = meal.name;

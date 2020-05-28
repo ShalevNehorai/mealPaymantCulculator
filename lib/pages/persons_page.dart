@@ -19,7 +19,8 @@ class _PersonsPageState extends State<PersonsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
 
-  FocusNode focusNode = FocusNode();
+  final ScrollController _scrollController = ScrollController();
+
   final tECDinerName = TextEditingController();
 
   final _diners = <Person>[];
@@ -33,6 +34,23 @@ class _PersonsPageState extends State<PersonsPage> {
   void dispose() {
     tECDinerName.dispose();
     super.dispose();
+  }
+
+  void addPerson(Person person){
+    _diners.add(person);
+    _animatedListKey.currentState.insertItem(0);
+    _scrollController.animateTo(_scrollController.position.maxScrollExtent + 100, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    print('${person.name} was added');
+  }
+
+  void removePerson(Person person, int index){
+    bool wasRemoved = _diners.remove(person);
+    _animatedListKey.currentState.removeItem(index, (context, animation) => SizeTransition(
+      sizeFactor: animation,
+      child: DinerRow(diner: person,)
+    ));
+    if(wasRemoved)
+      print('${person.name} was removed');
   }
 
   bool isPersonExists(String name){
@@ -96,6 +114,7 @@ class _PersonsPageState extends State<PersonsPage> {
           FlatButton(
             child: Icon(Icons.group_add, color: Colors.white,),
             onPressed: () async {
+            FocusScope.of(context).unfocus();
             showDialog(
               context: context,
               builder: (context) => ChooseGroupDialog(),
@@ -106,12 +125,11 @@ class _PersonsPageState extends State<PersonsPage> {
                     for (var member in value.members) {
                       Person diner = Person(member.toString());
                       if(!isPersonExists(diner.name)){
-                        _diners.add(diner);
+                        addPerson(diner);
                       }
                     }
                   });
                 }
-                focusNode.unfocus();
               });
             }
           )  
@@ -122,45 +140,50 @@ class _PersonsPageState extends State<PersonsPage> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Expanded(
-            child: ListView.builder(
+            child: AnimatedList(
+              key: _animatedListKey,
+              controller: _scrollController,
               shrinkWrap: true,
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: _diners.length,
-              itemBuilder: (context, i){
-                final diner = _diners[i];
-                return DinerRow(
-                  diner: diner,
-                  editName: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return TextInputDiglod(
-                          title: 'Edit the name',
-                          initialText: diner.name,
-                          validitiCheck: (value){
-                            if(value.isEmpty){
-                              return 'please enter text';
-                            }
-                            if(isPersonExists(value) && value != diner.name){
-                              return 'name already exists';
-                            }
-                            return null;
-                          },
-                        );
-                      },
-                    ).then((value) {
-                      if(value != null){
-                        setState((){
-                          diner.name = value;
-                        });
-                      }
-                    });
-                  },
-                  delete: (){
-                    setState(() {
-                      _diners.remove(diner);
-                    });
-                  },
+              itemBuilder: (context, index, animation) {
+                final diner = _diners[index];
+                return FadeTransition(
+                  // sizeFactor: animation,
+                  opacity: animation,
+                  child: DinerRow(
+                    diner: diner,
+                    editName: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return TextInputDiglod(
+                            title: 'Edit the name',
+                            initialText: diner.name,
+                            validitiCheck: (value){
+                              if(value.isEmpty){
+                                return 'please enter text';
+                              }
+                              if(isPersonExists(value) && value != diner.name){
+                                return 'name already exists';
+                              }
+                              return null;
+                            },
+                          );
+                        },
+                      ).then((value) {
+                        if(value != null){
+                          setState((){
+                            diner.name = value;
+                          });
+                        }
+                      });
+                    },
+                    delete: (){
+                      setState(() {
+                        removePerson(diner, index);
+                      });
+                    },
+                  ),
                 );
               },
             ),
@@ -177,7 +200,6 @@ class _PersonsPageState extends State<PersonsPage> {
                         padding: const EdgeInsets.only(right: 12.0, left: 12.0, bottom: 12.0),
                         child: TextField(
                           autofocus: false,
-                          focusNode: focusNode,
                           controller: tECDinerName,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
@@ -205,7 +227,7 @@ class _PersonsPageState extends State<PersonsPage> {
                           if (name.isNotEmpty) {
                             if(!isPersonExists(name)){
                               setState(() {
-                                _diners.add(new Person(name));
+                                addPerson(new Person(name));
                                 tECDinerName.clear();
                               });
                             }

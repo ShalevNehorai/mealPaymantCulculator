@@ -4,33 +4,35 @@ import 'package:meal_payment_culculator/person.dart';
 class DinerRow extends StatelessWidget {
 
   final Person diner;
-  final double tipPersentage;
   final Function delete;
   final Function editName;
 
-  DinerRow({@required this.diner, this.tipPersentage, @required this.delete, @required this.editName});
+  DinerRow({@required this.diner, this.delete, this.editName});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
-      padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
-      child: ListTile(
-        leading: Text(diner.name, style: TextStyle(
-          fontSize: 24.0,
-        ),),
-        trailing: SizedBox(
-          width: 120,
-          child: Row(
-            children: <Widget>[
-              IconButton(icon: Icon(Icons.edit, color: Colors.grey[600], size: 30),
-                onPressed: editName,
-              ),
-              SizedBox(width: 20,),
-              IconButton(icon: Icon(Icons.delete, color: Colors.red[600], size: 30,),
-                onPressed: delete,
-              ),
-            ],
+    return Card(
+      elevation: 2,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
+        child: ListTile(
+          leading: Text(diner.name, style: TextStyle(
+            fontSize: 24.0,
+          ),),
+          trailing: SizedBox(
+            width: 120,
+            child: Row(
+              children: <Widget>[
+                IconButton(icon: Icon(Icons.edit, color: Colors.grey[600], size: 30),
+                  onPressed: editName,
+                ),
+                SizedBox(width: 20,),
+                IconButton(icon: Icon(Icons.delete, color: Colors.red[600], size: 30,),
+                  onPressed: delete,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -5,7 +5,7 @@ import 'package:meal_payment_culculator/discount.dart';
 import 'package:meal_payment_culculator/meal.dart';
 
 class MealDiscountDialog extends StatefulWidget {
-  Meal meal;
+  final Meal meal;
 
   MealDiscountDialog({this.meal});
 

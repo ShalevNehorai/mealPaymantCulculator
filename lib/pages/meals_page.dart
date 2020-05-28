@@ -127,24 +127,22 @@ class MealsPageState extends State<MealsPage> {
                   itemCount: _meals.length,
                   itemBuilder: (context, i){
                     final meal = _meals[i];
-                    return Card(
-                      child: MealRow(meal: meal, diners: _diners, 
-                        delete: (){
-                          showDialog(context: context,
-                            builder: (context) {
-                              return ConfirmationDialog(
-                                title: 'are you sure you want to delete ${meal.name}?',
-                              );
-                            },
-                          ).then((value) {
-                            if(value){
-                              setState(() {
-                                _meals.removeAt(i);  
-                              });
-                            }
-                          });
-                        }
-                      ),
+                    return MealRow(meal: meal, diners: _diners, 
+                      delete: (){
+                        showDialog(context: context,
+                          builder: (context) {
+                            return ConfirmationDialog(
+                              title: 'are you sure you want to delete ${meal.name}?',
+                            );
+                          },
+                        ).then((value) {
+                          if(value){
+                            setState(() {
+                              _meals.removeAt(i);  
+                            });
+                          }
+                        });
+                      }
                     );
                   }
                 ),

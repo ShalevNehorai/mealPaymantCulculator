@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/person.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class ChooseEatersDialog extends StatefulWidget {
 
@@ -60,14 +59,14 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
         borderRadius: BorderRadius.circular(16.0)
       ),
       child: Container(
-        height: MediaQuery.of(context).size.height- 200,
+        // height: MediaQuery.of(context).size.height- 200,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                 child: RaisedButton(
                   child: Text('Done'),
                   onPressed: () => Navigator.of(context).pop(),
@@ -114,28 +113,31 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
                 separatorBuilder: (context, index) => Divider(), 
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                RaisedButton(
-                  child: Text('Select all'),
-                  onPressed: () {
-                    setState(() {
-                      widget.meal.addEaters(widget.diners);
-                      widget.meal.printEaters();
-                    });
-                  },
-                ),
-                RaisedButton(
-                  child: Text('Clear selection'),
-                  onPressed: () {
-                    setState(() {
-                      widget.meal.removeAllEates();
-                      widget.meal.printEaters();
-                    });
-                  },
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  RaisedButton(
+                    child: Text('Select all'),
+                    onPressed: () {
+                      setState(() {
+                        widget.meal.addEaters(widget.diners);
+                        widget.meal.printEaters();
+                      });
+                    },
+                  ),
+                  RaisedButton(
+                    child: Text('Clear selection'),
+                    onPressed: () {
+                      setState(() {
+                        widget.meal.removeAllEates();
+                        widget.meal.printEaters();
+                      });
+                    },
+                  )
+                ],
+              ),
             ),
             SizedBox(height: 6,)
           ],
