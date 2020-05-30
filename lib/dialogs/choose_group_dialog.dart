@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
 import 'package:meal_payment_culculator/dialogs/confirmation_dialog.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ChooseGroupDialog extends StatefulWidget {
   @override
@@ -10,7 +11,7 @@ class ChooseGroupDialog extends StatefulWidget {
 class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
 
   Future<List<GroupModel>> _getAllSavedGroups() async{
-    //await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(Duration(seconds: 3));
     DatabaseHelper helper = DatabaseHelper.instance;
     List<GroupModel> groupModels = await helper.queryAllGroups();
     if(groupModels != null){
@@ -85,16 +86,37 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
               },
               separatorBuilder: (context, index) => Divider(thickness: 1.0,),
             );
-          }
-          else{
-            return SizedBox(
+          } else {
+            return Container(
+              width: double.infinity,
+              child: Shimmer.fromColors(
+                baseColor: Colors.blue[500],
+                highlightColor: Colors.blue[200],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(radius: 10,),
+                      SizedBox(width: 5,),
+                      CircleAvatar(radius: 10,),
+                      SizedBox(width: 5,),
+                      CircleAvatar(radius: 10,),
+                    ],
+                  ),
+                )
+              )
+            )
+            
+            
+            /*SizedBox(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: CircularProgressIndicator(),
               ),
               height: MediaQuery.of(context).size.width / 2,
               width: MediaQuery.of(context).size.width / 2,
-            );
+            )*/;
           }
         }
       ),

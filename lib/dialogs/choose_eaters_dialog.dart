@@ -21,8 +21,6 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
 
   void generateSelectedList(){
     isSelected = List.generate(widget.diners.length, (index) => widget.meal.haveEater(widget.diners[index]));
-    bool isAllSelected = !isSelected.contains(false);
-    isSelected.insert(0, isAllSelected);
   }
 
   @override
@@ -96,7 +94,7 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
                   Person diner = filterdDiners[index];
                   return CheckboxListTile(
                     title: Text(diner.name),
-                    value: isSelected[index + 1],
+                    value: isSelected[widget.diners.indexOf(diner)],
                     onChanged: (value) {
                       setState(() {
                         if(value){

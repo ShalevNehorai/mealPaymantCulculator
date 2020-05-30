@@ -28,9 +28,16 @@ class MealsPageState extends State<MealsPage> {
   List<Meal> _meals = <Meal>[];
   Discount _discount = Discount(type: DiscountType.AMOUNT, amount: 0);
 
+  FocusNode mealNameFocus;
+  FocusNode mealPriceFocus;
+  FocusNode mealAmountFocus;
+
   @override
   void initState() {
     super.initState();
+    mealPriceFocus = FocusNode();
+    mealNameFocus = FocusNode();
+    mealAmountFocus = FocusNode();
   }
 
   double _getFullPayment(){
@@ -152,8 +159,14 @@ class MealsPageState extends State<MealsPage> {
                     children: <Widget>[
                       Flexible(
                         flex: 5,
-                        child: TextField(
+                        child: TextFormField(
                           controller: tECMealsName,
+                          focusNode: mealNameFocus,
+                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (value) {
+                            mealNameFocus.unfocus();
+                            FocusScope.of(context).requestFocus(mealPriceFocus);
+                          },
                           decoration: InputDecoration(
                             hintText: 'Meal name',
                             suffixIcon: IconButton(
@@ -166,8 +179,9 @@ class MealsPageState extends State<MealsPage> {
                       Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
                       Flexible(
                         flex: 3,
-                        child: TextField(
+                        child: TextFormField(
                           controller: tECMealsPrice,
+                          focusNode: mealPriceFocus,
                           keyboardType: TextInputType.numberWithOptions(decimal: true),
                           decoration: InputDecoration(
                             hintText: 'Price',
@@ -220,6 +234,7 @@ class MealsPageState extends State<MealsPage> {
                         amount = 1.toString();
                       }
                       if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null && amount.isNotEmpty) {
+                        FocusScope.of(context).unfocus();
                         setState(() {
                           for (int i = 0; i < int.parse(amount); i++) {
                             _meals.add(new Meal(name, double.parse(price))); 
@@ -251,6 +266,8 @@ class MealsPageState extends State<MealsPage> {
                   fontSize: 22
                 ),),
                 onPressed: _meals.isEmpty? null : (){
+                  FocusScope.of(context).unfocus();
+
                   double personPayment = _discount.getPriceAfterDiscount(_getFullPayment()) / _diners.length.toDouble();
                   _diners.forEach((element) {
                     element.resetPayment();

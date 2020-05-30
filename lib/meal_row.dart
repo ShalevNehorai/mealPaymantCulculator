@@ -43,6 +43,11 @@ class _MealRowState extends State<MealRow> {
     }
 
     return Card(
+      shape: ContinuousRectangleBorder(
+        borderRadius: BorderRadius.circular(50)
+      ),
+      color: widget.meal.isEatersEmpty()? Colors.white: Colors.blue[100],
+      elevation: 2,
       child: ExpansionTile(
         trailing: widget.meal.extras.isEmpty && widget.meal.discount.isEmpty()? Container(width: 0,) : null,
         subtitle: Padding(
