@@ -102,7 +102,8 @@ class MealsPageState extends State<MealsPage> {
         ],
       ),
       body: Column(
-        children: <Widget>[
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -124,223 +125,226 @@ class MealsPageState extends State<MealsPage> {
               ),
             ],
           ),
-          Flexible(
-            child: ListView(
+          Expanded(
+            child: ListView.builder(
               shrinkWrap: true,
-              children: <Widget>[
-                ListView.builder(
-                  physics: ClampingScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: _meals.length,
-                  itemBuilder: (context, i){
-                    final meal = _meals[i];
-                    return MealRow(meal: meal, diners: _diners, 
-                      delete: (){
-                        showDialog(context: context,
-                          builder: (context) {
-                            return ConfirmationDialog(
-                              title: 'are you sure you want to delete ${meal.name}?',
-                            );
-                          },
-                        ).then((value) {
-                          if(value){
-                            setState(() {
-                              _meals.removeAt(i);  
-                            });
-                          }
+              itemCount: _meals.length,
+              itemBuilder: (context, i){
+                final meal = _meals[i];
+                return MealRow(meal: meal, diners: _diners, 
+                  delete: (){
+                    showDialog(context: context,
+                      builder: (context) {
+                        return ConfirmationDialog(
+                          title: 'are you sure you want to delete ${meal.name}?',
+                        );
+                      },
+                    ).then((value) {
+                      if(value){
+                        setState(() {
+                          _meals.removeAt(i);  
                         });
                       }
-                    );
+                    });
                   }
+                );
+              }
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                  flex: 5,
+                  child: TextFormField(
+                    controller: tECMealsName,
+                    focusNode: mealNameFocus,
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (value) {
+                      mealNameFocus.unfocus();
+                      FocusScope.of(context).requestFocus(mealPriceFocus);
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Meal name',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.clear, size: 18,),
+                        onPressed: () => tECMealsName.clear(),
+                      ),
+                    ),
+                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
-                    children: <Widget>[
-                      Flexible(
-                        flex: 5,
-                        child: TextFormField(
-                          controller: tECMealsName,
-                          focusNode: mealNameFocus,
-                          textInputAction: TextInputAction.next,
-                          onFieldSubmitted: (value) {
-                            mealNameFocus.unfocus();
-                            FocusScope.of(context).requestFocus(mealPriceFocus);
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Meal name',
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, size: 18,),
-                              onPressed: () => tECMealsName.clear(),
-                            ),
-                          ),
-                        ),
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
+                Flexible(
+                  flex: 3,
+                  child: TextFormField(
+                    controller: tECMealsPrice,
+                    focusNode: mealPriceFocus,
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    decoration: InputDecoration(
+                      hintText: 'Price',
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.clear, size: 18,),
+                        onPressed: () => tECMealsPrice.clear(),
                       ),
-                      Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
-                      Flexible(
-                        flex: 3,
-                        child: TextFormField(
-                          controller: tECMealsPrice,
-                          focusNode: mealPriceFocus,
-                          keyboardType: TextInputType.numberWithOptions(decimal: true),
-                          decoration: InputDecoration(
-                            hintText: 'Price',
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, size: 18,),
-                              onPressed: () => tECMealsPrice.clear(),
-                            ),
-                          ),
-                          inputFormatters: <TextInputFormatter>[
-                            BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
-                          ],
-                        ),
-                      ),
-                      Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
-                      Flexible(
-                        flex: 2,
-                        child: SizedBox(
-                          height: 55,
-                          child: NumberInputWithIncrementDecrement(
-                            controller: tECMealAmount,
-                            min: 1,
-                            initialValue: 1,
-                            isInt: true,
-                            widgetContainerDecoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5.0),
-                              border: Border.all(
-                                color: Colors.blueGrey,
-                                width: 0.75,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
+                    ),
+                    inputFormatters: <TextInputFormatter>[
+                      BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: OutlineButton(
-                    splashColor: Colors.cyan,
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.grey[600],
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
+                Flexible(
+                  flex: 2,
+                  child: SizedBox(
+                    height: 55,
+                    child: NumberInputWithIncrementDecrement(
+                      controller: tECMealAmount,
+                      min: 1,
+                      initialValue: 1,
+                      isInt: true,
+                      widgetContainerDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5.0),
+                        border: Border.all(
+                          color: Colors.blueGrey,
+                          width: 0.75,
+                        ),
+                      ),
                     ),
-                    onPressed: () {
-                      String name = tECMealsName.text.trim();
-                      String price = tECMealsPrice.text.trim();
-                      String amount = tECMealAmount.text.trim();
-                      if(amount.isEmpty){
-                        amount = 1.toString();
-                      }
-                      if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null && amount.isNotEmpty) {
-                        FocusScope.of(context).unfocus();
-                        setState(() {
-                          for (int i = 0; i < int.parse(amount); i++) {
-                            _meals.add(new Meal(name, double.parse(price))); 
-                          }
-                          tECMealsName.clear();
-                          tECMealsPrice.clear();
-                          tECMealAmount.text = 1.toString();
-                        });
-                      }
-                      else{
-                        _scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text('The name or price is empty ', style: TextStyle(
-                            fontSize: 22
-                          ),),
-                        ));
-                      }
-                    },
                   ),
-                ),
+                )
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              RaisedButton(
-                //TODO check spelling
-                child: Text('Split evenly', style: TextStyle(
-                  fontSize: 22
-                ),),
-                onPressed: _meals.isEmpty? null : (){
-                  FocusScope.of(context).unfocus();
-
-                  double personPayment = _discount.getPriceAfterDiscount(_getFullPayment()) / _diners.length.toDouble();
-                  _diners.forEach((element) {
-                    element.resetPayment();
-                    element.addPayment(personPayment);
-                  });
-
-                  _openSummryPage();
-                }, 
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: RaisedButton(
+              elevation: 3,
+              splashColor: Colors.cyan,
+              child: Icon(
+                Icons.add,
+                color: Colors.grey[600],
               ),
-              RaisedButton(
-                onPressed: _meals.isEmpty? null : () {
-                  if(_discount.getPriceAfterDiscount(_getFullPayment()) <= 0){
-                    _diners.forEach((element) {element.resetPayment();});
-                    _openSummryPage();
-                    return;
-                  }
-                  
-                  for (Meal meal in _meals) {
-                    if(meal.isEatersEmpty()){
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text('Meal ${meal.name} have no eaters selected', style: TextStyle(
-                          fontSize: 22
-                        ),),
-                        duration: Duration(seconds: 3),
-                      ));
-                      return;
+              onPressed: () {
+                String name = tECMealsName.text.trim();
+                String price = tECMealsPrice.text.trim();
+                String amount = tECMealAmount.text.trim();
+                if(amount.isEmpty){
+                  amount = 1.toString();
+                }
+                if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null && amount.isNotEmpty) {
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    for (int i = 0; i < int.parse(amount); i++) {
+                      _meals.add(new Meal(name, double.parse(price))); 
                     }
-                  }
-
-                  _diners.forEach((element) {element.resetPayment();});
-                  _meals.forEach((element) {element.addMealPriceToEatersPayment();});
-
-                  List<Person> payingList = _getPayingDiners();
-
-                  double personalDiscountAmount = _discount.getDiscountAmount(_getFullPayment()) / payingList.length;
-
-                  payingList.forEach((element) {
-                    element.removePayment(personalDiscountAmount);
+                    tECMealsName.clear();
+                    tECMealsPrice.clear();
+                    tECMealAmount.text = 1.toString();
                   });
+                }
+                else{
+                  _scaffoldKey.currentState.showSnackBar(SnackBar(
+                    content: Text('The name or price is empty ', style: TextStyle(
+                      fontSize: 22
+                    ),),
+                  ));
+                }
+              },
+            ),
+          ),
+          SizedBox(height: 6,),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: RaisedButton(
+                  //TODO check spelling
+                  child: Text('Split evenly', style: TextStyle(
+                    fontSize: 22
+                  ),),
+                  onPressed: _meals.isEmpty? null : (){
+                    FocusScope.of(context).unfocus();
 
-                  double remainDiscount = 0;
-                  payingList.forEach((element) {
-                    if(element.payment < 0){
-                      remainDiscount += element.payment;
+                    double personPayment = _discount.getPriceAfterDiscount(_getFullPayment()) / _diners.length.toDouble();
+                    _diners.forEach((element) {
                       element.resetPayment();
-                    }
-                  });
-
-                  while (remainDiscount != 0) {
-                    payingList = _getPayingDiners();
-
-                    payingList.forEach((element) {
-                      element.removePayment(-remainDiscount / payingList.length);
+                      element.addPayment(personPayment);
                     });
 
-                    remainDiscount = 0;
+                    _openSummryPage();
+                  }, 
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: RaisedButton(
+                  onPressed: _meals.isEmpty? null : () {
+                    if(_discount.getPriceAfterDiscount(_getFullPayment()) <= 0){
+                      _diners.forEach((element) {element.resetPayment();});
+                      _openSummryPage();
+                      return;
+                    }
+                    
+                    for (Meal meal in _meals) {
+                      if(meal.isEatersEmpty()){
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text('Meal ${meal.name} have no eaters selected', style: TextStyle(
+                            fontSize: 22
+                          ),),
+                          duration: Duration(seconds: 3),
+                        ));
+                        return;
+                      }
+                    }
+
+                    _diners.forEach((element) {element.resetPayment();});
+                    _meals.forEach((element) {element.addMealPriceToEatersPayment();});
+
+                    List<Person> payingList = _getPayingDiners();
+
+                    double personalDiscountAmount = _discount.getDiscountAmount(_getFullPayment()) / payingList.length;
+
+                    payingList.forEach((element) {
+                      element.removePayment(personalDiscountAmount);
+                    });
+
+                    double remainDiscount = 0;
                     payingList.forEach((element) {
                       if(element.payment < 0){
                         remainDiscount += element.payment;
                         element.resetPayment();
-                        payingList.remove(element);
                       }
                     });
-                  }
 
-                  _openSummryPage();
-                },
-                child: Text('Next', style: TextStyle(
-                  fontSize: 22
-                ),),
+                    while (remainDiscount != 0) {
+                      payingList = _getPayingDiners();
+
+                      payingList.forEach((element) {
+                        element.removePayment(-remainDiscount / payingList.length);
+                      });
+
+                      remainDiscount = 0;
+                      payingList.forEach((element) {
+                        if(element.payment < 0){
+                          remainDiscount += element.payment;
+                          element.resetPayment();
+                          payingList.remove(element);
+                        }
+                      });
+                    }
+
+                    _openSummryPage();
+                  },
+                  child: Text('Next', style: TextStyle(
+                    fontSize: 22
+                  ),),
+                ),
               ),
             ],
           ),
+          SizedBox(height: 10,)
         ],
       ),
     );
