@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
 import 'package:meal_payment_culculator/dialogs/choose_group_dialog.dart';
@@ -65,9 +66,12 @@ class _PersonsPageState extends State<PersonsPage> {
   _saveCurrentGroup() async{
     DatabaseHelper helper = DatabaseHelper.instance;
     if (_diners.length > 1) {
-      showDialog(
+      showAnimatedDialog(
         context: context,
         barrierDismissible: false,
+        animationType: DialogTransitionType.slideFromTop,
+        curve: Curves.easeIn,
+        duration: Duration(milliseconds: 400),
         builder: (context) => TextInputDiglod(
           title: 'Enter group name', 
           validitiCheck: (value) async {
@@ -117,6 +121,7 @@ class _PersonsPageState extends State<PersonsPage> {
             FocusScope.of(context).unfocus();
             showDialog(
               context: context,
+              barrierDismissible: true,
               builder: (context) => ChooseGroupDialog(),
             ).then((value) {
                 if(value != null){

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/confirmation_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/discount_dialog.dart';
 import 'package:meal_payment_culculator/discount.dart';
@@ -111,8 +112,10 @@ class MealsPageState extends State<MealsPage> {
             textColor: Colors.white,
             child: Text('Add discount'),
             onPressed: () {
-              showDialog(
+              showAnimatedDialog(
                 context: context,
+                barrierDismissible: true,
+                animationType: DialogTransitionType.fade,
                 builder: (context) => DiscountDialog(),
               ).then((value) { 
                 if(value != null){

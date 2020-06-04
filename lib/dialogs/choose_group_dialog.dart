@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
 import 'package:meal_payment_culculator/dialogs/confirmation_dialog.dart';
 import 'package:shimmer/shimmer.dart';
@@ -21,8 +22,11 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
   }
 
   void _deleteSavedGroup(GroupModel groupModel) async{
-    showDialog(
-      context: context, 
+    showAnimatedDialog(
+      context: context,
+      barrierDismissible: false,
+      animationType: DialogTransitionType.fadeScale, 
+      curve: Curves.ease,
       builder: (context) {
         return ConfirmationDialog(
           title: 'are you sure you want to delete ${groupModel.name}?',

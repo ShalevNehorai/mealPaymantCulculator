@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/add_extra_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/choose_eaters_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/edit_meal_dialog.dart';
@@ -95,8 +96,10 @@ class _MealRowState extends State<MealRow> {
                   child: RaisedButton(
                     child: Text('choose eaters'),
                     onPressed: widget.diners == null? null : () {
-                      showDialog(
+                      showAnimatedDialog(
                         context: context,
+                        barrierDismissible: true,
+                        animationType: DialogTransitionType.size,
                         builder: (context) {
                           return ChooseEatersDialog(meal: widget.meal, diners: widget.diners,);
                         },
