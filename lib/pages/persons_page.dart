@@ -17,8 +17,8 @@ class PersonsPage extends StatefulWidget {
 
 class _PersonsPageState extends State<PersonsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
 
+  final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
   final ScrollController _scrollController = ScrollController();
 
   final tECDinerName = TextEditingController();
@@ -38,7 +38,7 @@ class _PersonsPageState extends State<PersonsPage> {
 
   void addPerson(Person person){
     _diners.add(person);
-    _animatedListKey.currentState.insertItem(0);
+    _animatedListKey.currentState.insertItem(_diners.length - 1);
     _scrollController.animateTo(_scrollController.position.maxScrollExtent + 100, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     print('${person.name} was added');
   }

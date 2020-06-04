@@ -13,7 +13,7 @@ class MealRow extends StatefulWidget {
   final List<Person> diners;
   final Function delete;
 
-  MealRow({@required this.meal, @required this.diners, @required this.delete});
+  MealRow({@required this.meal, this.diners, this.delete});
 
   @override
   _MealRowState createState() => _MealRowState();
@@ -94,7 +94,7 @@ class _MealRowState extends State<MealRow> {
                   fit: FlexFit.loose,
                   child: RaisedButton(
                     child: Text('choose eaters'),
-                    onPressed: () {
+                    onPressed: widget.diners == null? null : () {
                       showDialog(
                         context: context,
                         builder: (context) {

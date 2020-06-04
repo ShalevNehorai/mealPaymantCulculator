@@ -20,6 +20,9 @@ class MealsPage extends StatefulWidget {
 class MealsPageState extends State<MealsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
+  final ScrollController _scrollController = ScrollController();
+
   final tECMealsName = TextEditingController();
   final tECMealsPrice = TextEditingController();
   final tECMealAmount = TextEditingController();
@@ -63,6 +66,28 @@ class MealsPageState extends State<MealsPage> {
       'diners': _diners,
       'full price': _discount.getPriceAfterDiscount(_getFullPayment())
     });
+  }
+
+  void addMeal(Meal meal){
+    _meals.add(meal);
+    _animatedListKey.currentState.insertItem(_meals.length - 1);
+    changeScrollPosition(_scrollController.position.maxScrollExtent + 250);
+    print('${meal.name} was added');
+  }
+
+  void removeMeal(Meal meal, int index){
+    bool wasRemoved = _meals.remove(meal);
+    //TODO remove meal from animated list
+    _animatedListKey.currentState.removeItem(index, (context, animation) => SizeTransition(
+      sizeFactor: animation,
+      child: MealRow(meal: meal,)
+    ));
+    if(wasRemoved)
+      print('${meal.name} was removed');
+  }
+
+  void changeScrollPosition(double offset){
+    _scrollController.animateTo(offset, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
   }
 
   @override
@@ -126,27 +151,32 @@ class MealsPageState extends State<MealsPage> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
+            child: AnimatedList(
+              key: _animatedListKey,
+              controller: _scrollController,
               shrinkWrap: true,
-              itemCount: _meals.length,
-              itemBuilder: (context, i){
+              initialItemCount: _meals.length,
+              itemBuilder: (context, i, animation){
                 final meal = _meals[i];
-                return MealRow(meal: meal, diners: _diners, 
-                  delete: (){
-                    showDialog(context: context,
-                      builder: (context) {
-                        return ConfirmationDialog(
-                          title: 'are you sure you want to delete ${meal.name}?',
-                        );
-                      },
-                    ).then((value) {
-                      if(value){
-                        setState(() {
-                          _meals.removeAt(i);  
-                        });
-                      }
-                    });
-                  }
+                return SizeTransition(
+                  sizeFactor: animation,
+                  child: MealRow(meal: meal, diners: _diners, 
+                    delete: (){
+                      showDialog(context: context,
+                        builder: (context) {
+                          return ConfirmationDialog(
+                            title: 'are you sure you want to delete ${meal.name}?',
+                          );
+                        },
+                      ).then((value) {
+                        if(value){
+                          setState(() {
+                            removeMeal(meal, i);
+                          });
+                        }
+                      });
+                    }
+                  ),
                 );
               }
             ),
@@ -236,7 +266,8 @@ class MealsPageState extends State<MealsPage> {
                   FocusScope.of(context).unfocus();
                   setState(() {
                     for (int i = 0; i < int.parse(amount); i++) {
-                      _meals.add(new Meal(name, double.parse(price))); 
+                      Meal meal = Meal(name, double.parse(price));
+                      addMeal(meal);
                     }
                     tECMealsName.clear();
                     tECMealsPrice.clear();
@@ -295,6 +326,7 @@ class MealsPageState extends State<MealsPage> {
                           ),),
                           duration: Duration(seconds: 3),
                         ));
+                        changeScrollPosition((_meals.indexOf(meal) * 120).toDouble());
                         return;
                       }
                     }
