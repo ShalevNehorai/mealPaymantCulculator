@@ -78,7 +78,6 @@ class MealsPageState extends State<MealsPage> {
 
   void removeMeal(Meal meal, int index){
     bool wasRemoved = _meals.remove(meal);
-    //TODO remove meal from animated list
     _animatedListKey.currentState.removeItem(index, (context, animation) => SizeTransition(
       sizeFactor: animation,
       child: MealRow(meal: meal,)
@@ -89,6 +88,10 @@ class MealsPageState extends State<MealsPage> {
 
   void changeScrollPosition(double offset){
     _scrollController.animateTo(offset, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
+  }
+
+  void scrollToMeal(int index){
+    changeScrollPosition(index * 120.0);
   }
 
   @override
@@ -329,7 +332,7 @@ class MealsPageState extends State<MealsPage> {
                           ),),
                           duration: Duration(seconds: 3),
                         ));
-                        changeScrollPosition((_meals.indexOf(meal) * 120).toDouble());
+                        scrollToMeal(_meals.indexOf(meal));
                         return;
                       }
                     }

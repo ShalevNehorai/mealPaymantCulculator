@@ -122,7 +122,36 @@ class _SummryPageState extends State<SummryPage> {
               itemCount: filterdDiners.length,
               itemBuilder: (context, i){
                 final diner = filterdDiners[i];                
-                return ListTile(
+                return Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          // border: Border.all()
+                        ),
+                        width: 150,
+                        child: Center(
+                          child: Text(diner.name, style: TextStyle(
+                            fontSize: 30
+                          ),),
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        width: 150,
+                        child: Center(
+                          child: Text(diner.getPaymentWithTip(tip).toStringAsFixed(2), style: TextStyle(
+                            fontSize: 30
+                          ),),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+                 /*ListTile(
                   leading: Container(
                     width: 80,
                     child: Text(diner.name, style: TextStyle(
@@ -132,7 +161,7 @@ class _SummryPageState extends State<SummryPage> {
                   title: Text(diner.getPaymentWithTip(tip).toStringAsFixed(2), style: TextStyle(
                     fontSize: 24
                   ),),
-                );
+                );*/
               }
             ),
           ),
