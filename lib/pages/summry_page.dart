@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meal_payment_culculator/person.dart';
-import 'package:simple_search_bar/simple_search_bar.dart';
+import 'package:reveal_search_bar/RevealSearchBar.dart';
 
 class SummryPage extends StatefulWidget {
   static String SUMMRY_PAGE_ROUTE_NAME = '/summry';
@@ -11,7 +11,7 @@ class SummryPage extends StatefulWidget {
 }
 
 class _SummryPageState extends State<SummryPage> {
-  AppBarController appBarController = AppBarController();
+  TextEditingController searchController = TextEditingController();
   TextEditingController tECTipPersentage = TextEditingController();
 
   List<Person> diners = null;
@@ -24,6 +24,7 @@ class _SummryPageState extends State<SummryPage> {
     super.initState();
     tECTipPersentage.text = 10.toString();
     _setTip();
+    searchController.addListener(() => filterSearchResults(searchController.text));
   }
 
   void _setTip(){
@@ -36,7 +37,6 @@ class _SummryPageState extends State<SummryPage> {
   }
 
   void filterSearchResults(String query) {
-
     if(diners == null){
       print('no diners');
       return;
@@ -65,29 +65,10 @@ class _SummryPageState extends State<SummryPage> {
     double fullPrice = (ModalRoute.of(context).settings.arguments as Map)['full price'];
 
     return Scaffold(
-      appBar: SearchAppBar(
-        primary: Theme.of(context).primaryColor, 
-        mainAppBar: AppBar(
-          title: Text("Summry page"),
-          actions: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: InkWell(
-                child: Icon(
-                  Icons.search,
-                ),
-                onTap: () {
-                  appBarController.stream.add(true);
-                },
-              ),
-            )
-          ],
-        ), 
-        appBarController: appBarController, 
-        onChange: (String value) {
-          filterSearchResults(value);
-          print(value);
-        },
+      appBar: RevealAppBar(
+        searchController: searchController,
+        title: Text("Summry page"),
+        revealColor: Colors.blue[700],
       ),
       body: Column(
         children: [
@@ -117,7 +98,7 @@ class _SummryPageState extends State<SummryPage> {
             ),
           ),
           Flexible(
-            child: ListView.builder(
+            child: ListView.separated(
               shrinkWrap: true,
               itemCount: filterdDiners.length,
               itemBuilder: (context, i){
@@ -129,9 +110,6 @@ class _SummryPageState extends State<SummryPage> {
                     children: [
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          // border: Border.all()
-                        ),
                         width: 150,
                         child: Center(
                           child: Text(diner.name, style: TextStyle(
@@ -151,25 +129,21 @@ class _SummryPageState extends State<SummryPage> {
                     ],
                   ),
                 );
-                 /*ListTile(
-                  leading: Container(
-                    width: 80,
-                    child: Text(diner.name, style: TextStyle(
-                      fontSize: 24
-                    ),),
-                  ),
-                  title: Text(diner.getPaymentWithTip(tip).toStringAsFixed(2), style: TextStyle(
-                    fontSize: 24
-                  ),),
-                );*/
-              }
+              },
+              separatorBuilder: (context, index) {
+                return Divider(
+                  thickness: 1.35,
+                  endIndent: 20,
+                  indent: 20,
+                );
+              },
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Align(
-              alignment: Alignment.centerRight,
-              child: Text('full payment with tip: ${(fullPrice + tip * fullPrice).toStringAsFixed(2)}', style: TextStyle(
+              alignment: Alignment.center,
+              child: Text('Full payment with tip: ${(fullPrice + tip * fullPrice).toStringAsFixed(2)}', style: TextStyle(
                 fontSize: 25,
               ),),
             ),
