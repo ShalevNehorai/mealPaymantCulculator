@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/pages/meals_page.dart';
 import 'package:meal_payment_culculator/pages/persons_page.dart';
 import 'package:meal_payment_culculator/pages/summry_page.dart';
@@ -36,6 +38,16 @@ class AppState extends State<Home>{
         MealsPage.MEAL_PAGE_ROUTE_NAME : (context) => MealsPage(),
         SummryPage.SUMMRY_PAGE_ROUTE_NAME: (context) => SummryPage()
       },
+      localizationsDelegates: [
+        CustomLocalization.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale("en", "US"),
+        Locale("he", 'IL'), // OR Locale('ar', 'AE') OR Other RTL locales
+      ],
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
 import 'package:meal_payment_culculator/dialogs/choose_group_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
@@ -113,7 +114,9 @@ class _PersonsPageState extends State<PersonsPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Persons'),
+        title: Text(CustomLocalization.of(context).diners, style: TextStyle(
+          fontSize: 24,
+        ),),
         actions: [
           FlatButton(
             child: Icon(Icons.group_add, color: Colors.white,),
@@ -278,7 +281,7 @@ class _PersonsPageState extends State<PersonsPage> {
                               'diners': _diners
                             });
                           },
-                          child: Text('Next'),
+                          child: Text(MaterialLocalizations.of(context).okButtonLabel),
                         ),
                       ),
                     ),
