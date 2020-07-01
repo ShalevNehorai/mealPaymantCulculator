@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/person.dart';
 import 'package:reveal_search_bar/RevealSearchBar.dart';
 
-class SummryPage extends StatefulWidget {
-  static String SUMMRY_PAGE_ROUTE_NAME = '/summry';
+class SummaryPage extends StatefulWidget {
+  static String SUMMARY_PAGE_ROUTE_NAME = '/summry';
 
   @override
-  _SummryPageState createState() => _SummryPageState();
+  _SummaryPageState createState() => _SummaryPageState();
 }
 
-class _SummryPageState extends State<SummryPage> {
+class _SummaryPageState extends State<SummaryPage> {
   TextEditingController searchController = TextEditingController();
   TextEditingController tECTipPersentage = TextEditingController();
 
@@ -23,8 +24,8 @@ class _SummryPageState extends State<SummryPage> {
   void initState() {
     super.initState();
     tECTipPersentage.text = 10.toString();
-    _setTip();
     searchController.addListener(() => filterSearchResults(searchController.text));
+    _setTip();
   }
 
   void _setTip(){
@@ -67,7 +68,7 @@ class _SummryPageState extends State<SummryPage> {
     return Scaffold(
       appBar: RevealAppBar(
         searchController: searchController,
-        title: Text("Summry page"),
+        title: Text(CustomLocalization.of(context).summaryHeader),
         revealColor: Colors.blue[700],
       ),
       body: Column(
@@ -81,7 +82,7 @@ class _SummryPageState extends State<SummryPage> {
                 BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
               ],
               decoration: InputDecoration(
-                labelText: 'TIP percentage',//TODO chack spelling
+                labelText: CustomLocalization.of(context).tipPersentage,
                 labelStyle: TextStyle(
                   fontSize: 24
                 ),
@@ -90,6 +91,9 @@ class _SummryPageState extends State<SummryPage> {
               style: TextStyle(
                 fontSize: 22
               ),
+              onTap: () {
+                tECTipPersentage.selection = TextSelection.collapsed(offset: tECTipPersentage.text.length); //TODO see if it is not worse
+              },
               onChanged: (value) {
                 setState(() {
                   _setTip();
@@ -143,7 +147,7 @@ class _SummryPageState extends State<SummryPage> {
             padding: const EdgeInsets.all(16.0),
             child: Align(
               alignment: Alignment.center,
-              child: Text('Full payment with tip: ${(fullPrice + tip * fullPrice).toStringAsFixed(2)}', style: TextStyle(
+              child: Text('${CustomLocalization.of(context).fullPayWithTip}: ${(fullPrice + tip * fullPrice).toStringAsFixed(2)}', style: TextStyle(
                 fontSize: 25,
               ),),
             ),

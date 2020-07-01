@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/dialogs/confirmation_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/discount_dialog.dart';
 import 'package:meal_payment_culculator/discount.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/meal_row.dart';
-import 'package:meal_payment_culculator/pages/summry_page.dart';
+import 'package:meal_payment_culculator/pages/summary_page.dart';
 import 'package:meal_payment_culculator/person.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
 
@@ -20,8 +21,10 @@ class MealsPage extends StatefulWidget {
 
 class MealsPageState extends State<MealsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+
+
   final ScrollController _scrollController = ScrollController();
 
   final tECMealsName = TextEditingController();
@@ -63,7 +66,7 @@ class MealsPageState extends State<MealsPage> {
   }
 
   void _openSummryPage(){
-    Navigator.pushNamed(context, SummryPage.SUMMRY_PAGE_ROUTE_NAME, arguments: {
+    Navigator.pushNamed(context, SummaryPage.SUMMARY_PAGE_ROUTE_NAME, arguments: {
       'diners': _diners,
       'full price': _discount.getPriceAfterDiscount(_getFullPayment())
     });
@@ -100,11 +103,11 @@ class MealsPageState extends State<MealsPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Meals'),
+        title: Text(CustomLocalization.of(context).mealsHeader),
         actions: [
           FlatButton(
             textColor: Colors.white,
-            child: Text('Clear discount'),
+            child: Text(CustomLocalization.of(context).clearDiscount),
             onPressed: () {
               setState(() {
                 _discount.amount = 0;
@@ -113,7 +116,7 @@ class MealsPageState extends State<MealsPage> {
           ),
           FlatButton(
             textColor: Colors.white,
-            child: Text('Add discount'),
+            child: Text(CustomLocalization.of(context).addDiscount),
             onPressed: () {
               showAnimatedDialog(
                 context: context,
@@ -142,14 +145,14 @@ class MealsPageState extends State<MealsPage> {
                 visible: _discount.amount != 0,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text('discount: ${_discount.getDiscountAmount(_getFullPayment()).toStringAsFixed(2)}'),
+                  child: Text('${CustomLocalization.of(context).discount}: ${_discount.getDiscountAmount(_getFullPayment()).toStringAsFixed(2)}'),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Align(
                   alignment: Alignment.centerRight,
-                  child: Text('full payment: ${_discount.getPriceAfterDiscount(_getFullPayment()).toStringAsFixed(2)}', style: TextStyle(
+                  child: Text('${CustomLocalization.of(context).fullPayment}: ${_discount.getPriceAfterDiscount(_getFullPayment()).toStringAsFixed(2)}', style: TextStyle(
                     fontSize: 25,
                   ),),
                 ),
@@ -171,7 +174,7 @@ class MealsPageState extends State<MealsPage> {
                       showDialog(context: context,
                         builder: (context) {
                           return ConfirmationDialog(
-                            title: 'are you sure you want to delete ${meal.name}?',
+                            title: '${CustomLocalization.of(context).deletConfirmation} ${meal.name}?',
                           );
                         },
                       ).then((value) {
@@ -189,67 +192,88 @@ class MealsPageState extends State<MealsPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                  flex: 5,
-                  child: TextFormField(
-                    controller: tECMealsName,
-                    focusNode: mealNameFocus,
-                    textInputAction: TextInputAction.next,
-                    onFieldSubmitted: (value) {
-                      mealNameFocus.unfocus();
-                      FocusScope.of(context).requestFocus(mealPriceFocus);
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Meal name',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear, size: 18,),
-                        onPressed: () => tECMealsName.clear(),
+            child: Form(
+              key: _formKey,
+              child: Row(
+                children: <Widget>[
+                  Flexible(
+                    flex: 5,
+                    child: TextFormField(
+                      controller: tECMealsName,
+                      focusNode: mealNameFocus,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (value) {
+                        mealNameFocus.unfocus();
+                        FocusScope.of(context).requestFocus(mealPriceFocus);
+                      },
+                      decoration: InputDecoration(
+                        hintText: CustomLocalization.of(context).mealNameHint,
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.clear, size: 18,),
+                          onPressed: () => tECMealsName.clear(),
+                        ),
                       ),
+                      validator: (value) {
+                        if(value.isEmpty){
+                          return CustomLocalization.of(context).requiredField;
+                        }
+
+                        return null;
+                      },
                     ),
                   ),
-                ),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
-                Flexible(
-                  flex: 3,
-                  child: TextFormField(
-                    controller: tECMealsPrice,
-                    focusNode: mealPriceFocus,
-                    keyboardType: TextInputType.numberWithOptions(decimal: true),
-                    decoration: InputDecoration(
-                      hintText: 'Price',
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear, size: 18,),
-                        onPressed: () => tECMealsPrice.clear(),
+                  Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
+                  Flexible(
+                    flex: 3,
+                    child: TextFormField(
+                      controller: tECMealsPrice,
+                      focusNode: mealPriceFocus,
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        hintText: CustomLocalization.of(context).mealPriceHint,
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.clear, size: 18,),
+                          onPressed: () => tECMealsPrice.clear(),
+                        ),
                       ),
+                      inputFormatters: <TextInputFormatter>[
+                        BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
+                      ],
+                      validator: (value) {
+                        if(value.isEmpty){
+                          return CustomLocalization.of(context).requiredField;
+                        }
+
+                        if(num.tryParse(value) == null){
+                          return CustomLocalization.of(context).numberRequirement;
+                        }
+
+                        return null;
+                      },
                     ),
-                    inputFormatters: <TextInputFormatter>[
-                      BlacklistingTextInputFormatter(new RegExp('[\\-|\\ |\\,]')),
-                    ],
                   ),
-                ),
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
-                Flexible(
-                  flex: 2,
-                  child: SizedBox(
-                    height: 55,
-                    child: NumberInputWithIncrementDecrement(
-                      controller: tECMealAmount,
-                      min: 1,
-                      initialValue: 1,
-                      isInt: true,
-                      widgetContainerDecoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
-                        border: Border.all(
-                          color: Colors.blueGrey,
-                          width: 0.75,
+                  Padding(padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 0.0),),
+                  Flexible(
+                    flex: 2,
+                    child: SizedBox(
+                      height: 55,
+                      child: NumberInputWithIncrementDecrement(
+                        controller: tECMealAmount,
+                        min: 1,
+                        initialValue: 1,
+                        isInt: true,
+                        widgetContainerDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.0),
+                          border: Border.all(
+                            color: Colors.blueGrey,
+                            width: 0.75,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
           SizedBox(
@@ -262,16 +286,22 @@ class MealsPageState extends State<MealsPage> {
                 color: Colors.grey[600],
               ),
               onPressed: () {
+                if(!_formKey.currentState.validate()){
+                  return;
+                }
+
                 String name = tECMealsName.text.trim();
                 String price = tECMealsPrice.text.trim();
-                String amount = tECMealAmount.text.trim();
-                if(amount.isEmpty){
-                  amount = 1.toString();
+                int amount = int.tryParse(tECMealAmount.text.trim());
+
+                if(amount == null || amount < 1){
+                  amount = 1;
                 }
-                if (name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null && amount.isNotEmpty) {
+
+                if(name.isNotEmpty && price.isNotEmpty && num.tryParse(price) != null) {
                   FocusScope.of(context).unfocus();
                   setState(() {
-                    for (int i = 0; i < int.parse(amount); i++) {
+                    for (int i = 0; i < amount; i++) {
                       Meal meal = Meal(name, double.parse(price));
                       addMeal(meal);
                     }
@@ -279,13 +309,6 @@ class MealsPageState extends State<MealsPage> {
                     tECMealsPrice.clear();
                     tECMealAmount.text = 1.toString();
                   });
-                }
-                else{
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text('The name or price is empty ', style: TextStyle(
-                      fontSize: 22
-                    ),),
-                  ));
                 }
               },
             ),
@@ -297,8 +320,7 @@ class MealsPageState extends State<MealsPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: RaisedButton(
-                  //TODO check spelling
-                  child: Text('Split evenly', style: TextStyle(
+                  child: Text(CustomLocalization.of(context).splitEvenly, style: TextStyle(
                     fontSize: 22
                   ),),
                   onPressed: _meals.isEmpty? null : (){
@@ -327,7 +349,7 @@ class MealsPageState extends State<MealsPage> {
                     for (Meal meal in _meals) {
                       if(meal.isEatersEmpty()){
                         _scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text('Meal ${meal.name} have no eaters selected', style: TextStyle(
+                          content: Text('${CustomLocalization.of(context).meal} ${meal.name} ${CustomLocalization.of(context).noEatersSelected}', style: TextStyle(
                             fontSize: 22
                           ),),
                           duration: Duration(seconds: 3),
@@ -375,7 +397,7 @@ class MealsPageState extends State<MealsPage> {
 
                     _openSummryPage();
                   },
-                  child: Text('Next', style: TextStyle(
+                  child: Text(CustomLocalization.of(context).calculateMeal, style: TextStyle(
                     fontSize: 22
                   ),),
                 ),

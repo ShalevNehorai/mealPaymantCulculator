@@ -1,3 +1,26 @@
 {
-    "diners": "Diners"
+    "diners_header": "Diners",
+    "meals_header": "Meals",
+    "summary_header": "Summary",
+    "diner_name_hint": "Enter person name",
+    "save_party": "Save current party",
+    "required_field": "Required field",
+    "name_exists": "Name alredy exists",
+    "enter_group_name": "Enter group name",
+    "save_party_requirement": "there need to be at list 2 diners",
+    "edit_name": "Edit name",
+    "clear_discount": "Clear discount",
+    "add_discount": "Add discount",
+    "discount": "Discount",
+    "full_payment": "Full payment",
+    "delete_confirmation": "Are you sure you want to delete",
+    "meal_name_hint": "Enter Meal name",
+    "meal_price_hint": "Price",
+    "number_requirement": "Must be number",
+    "split_evenly": "Split evenly",
+    "meal": "Meal",
+    "no_eaters_selected": "have no eaters selected",
+    "calculate_meal": "Calculate meal",
+    "tip_percentage": "TIP percentage",
+    "with_tip": "with tip"
 }

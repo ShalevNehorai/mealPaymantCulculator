@@ -1,3 +1,26 @@
 {
-    "diners": "סועדים"
+    "diners_header": "סועדים",
+    "meals_header": "ארוחות",
+    "summary_header": "סיכום",    
+    "diner_name_hint": "הכנס שם סועד",
+    "save_party": "שמור קבוצה",
+    "required_field": "שדה חובה",
+    "name_exists": "השם כבר קיים",
+    "enter_group_name": "הכנס שם קבוצה",
+    "save_party_requirement": "חובה שיהיה לפחות שני סועדים",
+    "edit_name": "ערוך שם",
+    "clear_discount": "מחק הנחה",
+    "add_discount": "הוסף הנחה",
+    "discount": "הנחה",
+    "full_payment": "תשלום מלא",
+    "delete_confirmation": "האם אתה בטוח שברצונך למחוק",
+    "meal_name_hint": "הכנס שם ארוחה",
+    "meal_price_hint": "מחיר",
+    "number_requirement": "חייב להיות מספר",
+    "split_evenly": "חלק באופן שווה",
+    "meal": "לארוחה",
+    "no_eaters_selected": "לא נבחרו אוכלים",
+    "calculate_meal": "חשב ארוחה",
+    "tip_percentage": "אחוז טיפ",
+    "with_tip": "עם טיפ"
 }

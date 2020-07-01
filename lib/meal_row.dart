@@ -62,138 +62,134 @@ class _MealRowState extends State<MealRow> {
         title: Container(
           margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
           padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
-          child: Directionality(
-            textDirection: TextDirection.ltr,//TODO chack what is better
-            // TextDirection.rtl,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.0),
-                  constraints: BoxConstraints(minWidth: 90, maxWidth: 90),
-                  child: Column(
-                    children: <Widget>[
-                      Text(widget.meal.name, style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.black
-                      ),),
-                      SizedBox(height: 4.0,),
-                      Text(widget.meal.fullPrice.toString(), style: TextStyle(
-                        fontSize: 18.0,
-                        color: Colors.black
-                      ),),
-                      SizedBox(height: 2.0,),
-                      Text('(${widget.meal.rawPrice})', style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black
-                      ),)
-                    ],
-                  ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                constraints: BoxConstraints(minWidth: 90, maxWidth: 90),
+                child: Column(
+                  children: <Widget>[
+                    Text(widget.meal.name, style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black
+                    ),),
+                    SizedBox(height: 4.0,),
+                    Text(widget.meal.fullPrice.toString(), style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.black
+                    ),),
+                    SizedBox(height: 2.0,),
+                    Text('(${widget.meal.rawPrice})', style: TextStyle(
+                      fontSize: 12.0,
+                      color: Colors.black
+                    ),)
+                  ],
                 ),
-                Flexible(
-                  fit: FlexFit.loose,
-                  child: RaisedButton(
-                    child: Text('choose eaters'),
-                    onPressed: widget.diners == null? null : () {
-                      showAnimatedDialog(
-                        context: context,
-                        barrierDismissible: true,
-                        animationType: DialogTransitionType.size,
-                        builder: (context) {
-                          return ChooseEatersDialog(meal: widget.meal, diners: widget.diners,);
-                        },
-                      ).then((value) => setState((){}));
-                    },
-                  ),
-                ),
-                PopupMenuButton(
-                  onSelected: (value) {
-                    if(value != null){
-                      try {
-                        value();
-                      } catch (e) {
-                      }
-                    }
-                  },
-                  elevation: 3,
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem(
-                        enabled: true,
-                        height: 2.0,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Add extra'),
-                        ),
-                        value: (){  
-                          showDialog(
-                            context: context, 
-                            barrierDismissible: true,
-                            builder: (context) => AddExtraDialog(meal: widget.meal),
-                          ).then((value) => context.findAncestorStateOfType<MealsPageState>().setState(() { }));
-                        },
-                      ),
-                      PopupMenuItem(
-                        enabled: true,
-                        height: 2.0,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Add discount'),
-                        ),
-                        value: (){
-                          showDialog(
-                            context: context,
-                            builder: (context) => MealDiscountDialog(meal:widget.meal,),
-                          ).then((value) => context.findAncestorStateOfType<MealsPageState>().setState(() { }));
-                        },
-                      ),
-                      PopupMenuItem(
-                        enabled: true,
-                        height: 2.0,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Edit'),
-                        ),
-                        value: (){
-                          showDialog(context: context,
-                            builder: (context) => EditMealDialog(meal: widget.meal,),
-                          ).then((value) => setState((){}));
-                        },
-                      ),
-                      PopupMenuItem(
-                        enabled: true,
-                        height: 2.0,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Delete'),
-                        ),
-                        value: widget.delete,
-                      ),
-                    ];
-                  },
-                ),
-                /*IconButton(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    showDialog(
-                      context: context, 
+              ),
+              Flexible(
+                fit: FlexFit.loose,
+                child: RaisedButton(
+                  child: Text('choose eaters'),
+                  onPressed: widget.diners == null? null : () {
+                    showAnimatedDialog(
+                      context: context,
                       barrierDismissible: true,
-                      builder: (context) => AddExtraDialog(meal: widget.meal),
-                    ).then((value) {
-                        context.findAncestorStateOfType<MealsPageState>().setState(() { });
-                      }
-                    );
+                      animationType: DialogTransitionType.size,
+                      builder: (context) {
+                        return ChooseEatersDialog(meal: widget.meal, diners: widget.diners,);
+                      },
+                    ).then((value) => setState((){}));
                   },
                 ),
-                IconButton(
-                  padding: EdgeInsets.symmetric(horizontal: 0.0),
-                  icon: Icon(Icons.delete, color: Colors.red[600],),
-                  onPressed: widget.delete,
-                ),*/
-              ],
-            ),
+              ),
+              PopupMenuButton(
+                onSelected: (value) {
+                  if(value != null){
+                    try {
+                      value();
+                    } catch (e) {
+                    }
+                  }
+                },
+                elevation: 3,
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(
+                      enabled: true,
+                      height: 2.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Add extra'),
+                      ),
+                      value: (){  
+                        showDialog(
+                          context: context, 
+                          barrierDismissible: true,
+                          builder: (context) => AddExtraDialog(meal: widget.meal),
+                        ).then((value) => context.findAncestorStateOfType<MealsPageState>().setState(() { }));
+                      },
+                    ),
+                    PopupMenuItem(
+                      enabled: true,
+                      height: 2.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Add discount'),
+                      ),
+                      value: (){
+                        showDialog(
+                          context: context,
+                          builder: (context) => MealDiscountDialog(meal:widget.meal,),
+                        ).then((value) => context.findAncestorStateOfType<MealsPageState>().setState(() { }));
+                      },
+                    ),
+                    PopupMenuItem(
+                      enabled: true,
+                      height: 2.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Edit'),
+                      ),
+                      value: (){
+                        showDialog(context: context,
+                          builder: (context) => EditMealDialog(meal: widget.meal,),
+                        ).then((value) => setState((){}));
+                      },
+                    ),
+                    PopupMenuItem(
+                      enabled: true,
+                      height: 2.0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('Delete'),
+                      ),
+                      value: widget.delete,
+                    ),
+                  ];
+                },
+              ),
+              /*IconButton(
+                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  showDialog(
+                    context: context, 
+                    barrierDismissible: true,
+                    builder: (context) => AddExtraDialog(meal: widget.meal),
+                  ).then((value) {
+                      context.findAncestorStateOfType<MealsPageState>().setState(() { });
+                    }
+                  );
+                },
+              ),
+              IconButton(
+                padding: EdgeInsets.symmetric(horizontal: 0.0),
+                icon: Icon(Icons.delete, color: Colors.red[600],),
+                onPressed: widget.delete,
+              ),*/
+            ],
           ),
         ),
         children: expendedRows

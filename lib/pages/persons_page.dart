@@ -19,8 +19,9 @@ class PersonsPage extends StatefulWidget {
 
 class _PersonsPageState extends State<PersonsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   final GlobalKey<AnimatedListState> _animatedListKey = new GlobalKey<AnimatedListState>();
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  
   final ScrollController _scrollController = ScrollController();
 
   final tECDinerName = TextEditingController();
@@ -69,19 +70,19 @@ class _PersonsPageState extends State<PersonsPage> {
     if (_diners.length > 1) {
       showAnimatedDialog(
         context: context,
-        barrierDismissible: false,
+        barrierDismissible: true,
         animationType: DialogTransitionType.slideFromTop,
         curve: Curves.easeIn,
         duration: Duration(milliseconds: 400),
         builder: (context) => TextInputDiglod(
-          title: 'Enter group name', 
+          title: CustomLocalization.of(context).enterGroupName, 
           validitiCheck: (value) async {
             if(value.isEmpty){
-              return 'please enter text';
+              return CustomLocalization.of(context).requiredField;
             }
             bool isExsist = await helper.isGroupNameExisted(value);
             if(isExsist){
-              return 'the name is already taken';
+              return CustomLocalization.of(context).nameExists;
             }
             return null;
           }
@@ -103,7 +104,7 @@ class _PersonsPageState extends State<PersonsPage> {
     }
     else{
       Fluttertoast.showToast(
-        msg: 'there need to be at list 2 diners',
+        msg: CustomLocalization.of(context).savePartyRequirement,
         fontSize: 25.0,
       );
     }
@@ -114,7 +115,7 @@ class _PersonsPageState extends State<PersonsPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(CustomLocalization.of(context).diners, style: TextStyle(
+        title: Text(CustomLocalization.of(context).dinersHeader, style: TextStyle(
           fontSize: 24,
         ),),
         actions: [
@@ -165,14 +166,14 @@ class _PersonsPageState extends State<PersonsPage> {
                         context: context,
                         builder: (context) {
                           return TextInputDiglod(
-                            title: 'Edit the name',
+                            title: CustomLocalization.of(context).editName,
                             initialText: diner.name,
                             validitiCheck: (value){
                               if(value.isEmpty){
-                                return 'please enter text';
+                                return CustomLocalization.of(context).requiredField;
                               }
                               if(isPersonExists(value) && value != diner.name){
-                                return 'name already exists';
+                                return CustomLocalization.of(context).nameExists;
                               }
                               return null;
                             },
@@ -206,20 +207,32 @@ class _PersonsPageState extends State<PersonsPage> {
                       flex: 3,
                       child: Padding(
                         padding: const EdgeInsets.only(right: 12.0, left: 12.0, bottom: 12.0),
-                        child: TextField(
-                          autofocus: false,
-                          controller: tECDinerName,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.clear, size: 18,),
-                              onPressed: () => tECDinerName.clear(),
+                        child: Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            autofocus: false,
+                            controller: tECDinerName,
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                icon: Icon(Icons.clear, size: 18,),
+                                onPressed: () => tECDinerName.clear(),
+                              ),
+                              hintText: CustomLocalization.of(context).dinerNameHint
                             ),
-                            hintText: 'Enter person name'
+                            inputFormatters: <TextInputFormatter>[
+                              BlacklistingTextInputFormatter(new RegExp('[\\|]')),
+                            ],
+                            onChanged: (value) => setState((){}),
+                            validator: (value) {
+                              if(value.isEmpty){
+                                return CustomLocalization.of(context).requiredField;
+                              }
+                              else if(isPersonExists(value)){
+                                return CustomLocalization.of(context).nameExists;
+                              }
+                              return null;
+                            },
                           ),
-                          inputFormatters: <TextInputFormatter>[
-                            BlacklistingTextInputFormatter(new RegExp('[\\|]')),
-                          ],
-                          onChanged: (value) => setState((){}),
                         ),
                       ),
                     ),
@@ -231,6 +244,10 @@ class _PersonsPageState extends State<PersonsPage> {
                           color: Colors.grey[600],
                         ),
                         onPressed: tECDinerName.text.trim().isEmpty? null : () {
+                          if(!_formKey.currentState.validate()){
+                            return;
+                          }
+
                           String name = tECDinerName.text.trim();
                           if (name.isNotEmpty) {
                             if(!isPersonExists(name)){
@@ -239,20 +256,6 @@ class _PersonsPageState extends State<PersonsPage> {
                                 tECDinerName.clear();
                               });
                             }
-                            else{
-                              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                                content: Text('Name already exists', style: TextStyle(
-                                  fontSize: 25.0,
-                                ),),
-                              ));
-                            }
-                          }
-                          else{
-                            _scaffoldKey.currentState.showSnackBar(SnackBar(
-                              content: Text('The name is empty', style: TextStyle(
-                                fontSize: 25.0,
-                              ),),
-                            ));
                           }
                         },
                       ),
@@ -268,7 +271,7 @@ class _PersonsPageState extends State<PersonsPage> {
                         onPressed: _diners.length < 2 ? null : () {
                           _saveCurrentGroup();
                         },
-                        child: Text('save current party'),
+                        child: Text(CustomLocalization.of(context).saveParty),
                       ),
                     ),
                     Padding(
@@ -281,7 +284,7 @@ class _PersonsPageState extends State<PersonsPage> {
                               'diners': _diners
                             });
                           },
-                          child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                          child: Text(MaterialLocalizations.of(context).okButtonLabel),//TDOD change the text to something more directed
                         ),
                       ),
                     ),
