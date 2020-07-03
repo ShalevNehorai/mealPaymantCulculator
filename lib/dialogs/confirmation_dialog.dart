@@ -17,17 +17,19 @@ class ConfirmationDialog extends StatelessWidget {
         fontSize: 22.0,
       ),),
       content: content != null? Text(content): null,
+      actionsPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       actions: <Widget>[
         RaisedButton(
-          child: Text('CANCLE'),
+          child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
           color: Colors.red[200],
           onPressed: () => Navigator.of(context).pop(false),
         ),
+        SizedBox(width: MediaQuery.of(context).size.width * 0.3,),
         RaisedButton(
-          child: Text('DELETE'),
+          child: Text(MaterialLocalizations.of(context).deleteButtonTooltip.toUpperCase()),
           color: Colors.blue[300],
           onPressed: () => Navigator.of(context).pop(true),
-        )
+        ),
       ],
     );
   }

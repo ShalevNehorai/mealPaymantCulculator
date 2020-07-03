@@ -30,105 +30,89 @@ class CustomLocalization {
     return _localizedValues[key];
   }
 
-  String get dinersHeader{
-    return getTranslatedValue('diners_header');
-  }
+  String get dinersHeader => getTranslatedValue('diners_header');
 
-  String get mealsHeader{
-    return getTranslatedValue('meals_header');
-  }
+  String get mealsHeader => getTranslatedValue('meals_header');
 
-  String get summaryHeader{
-    return getTranslatedValue('summary_header');
-  }
+  String get summaryHeader => getTranslatedValue('summary_header');
 
-  String get dinerNameHint{
-    return getTranslatedValue('diner_name_hint');
-  }
+  String get dinerNameHint => getTranslatedValue('diner_name_hint');
 
-  String get saveParty{
-    return getTranslatedValue('save_party');
-  }
+  String get saveParty => getTranslatedValue('save_party');
 
-  String get requiredField{
-    return getTranslatedValue('required_field');
-  }
+  String get requiredField => getTranslatedValue('required_field');
 
-  String get nameExists{
-    return getTranslatedValue('name_exists');
-  }
+  String get nameExists => getTranslatedValue('name_exists');
 
-  String get enterGroupName{
-    return getTranslatedValue('enter_group_name');
-  }
+  String get enterGroupName => getTranslatedValue('enter_group_name');
 
-  String get savePartyRequirement{
-    return getTranslatedValue('save_party_requirement');
-  }
+  String get savePartyRequirement => getTranslatedValue('save_party_requirement');
 
-  String get editName{
-    return getTranslatedValue('edit_name');
-  }
+  String get editName => getTranslatedValue('edit_name');
 
-  String get clearDiscount{
-    return getTranslatedValue('clear_discount');
-  }
+  String get clearDiscount => getTranslatedValue('clear_discount');
 
-  String get addDiscount{
-    return getTranslatedValue('add_discount');
-  }
+  String get addDiscount => getTranslatedValue('add_discount');
 
-  String get discount{
-    return getTranslatedValue('discount');
-  }
+  String get discount => getTranslatedValue('discount');
 
-  String get fullPayment{
-    return getTranslatedValue('full_payment');
-  }
+  String get fullPayment => getTranslatedValue('full_payment');
 
-  String get deletConfirmation{
-    return getTranslatedValue('delete_confirmation');
-  }
+  String get deletConfirmation => getTranslatedValue('delete_confirmation');
 
-  String get mealNameHint{
-    return getTranslatedValue('meal_name_hint');
-  }
+  String get mealNameHint => getTranslatedValue('meal_name_hint');
 
-  String get mealPriceHint{
-    return getTranslatedValue('meal_price_hint');
-  }
+  String get priceHint => getTranslatedValue('price_hint');
 
-  String get numberRequirement{
-    return getTranslatedValue('number_requirement');
-  }
+  String get numberRequirement => getTranslatedValue('number_requirement');
 
-  String get splitEvenly{
-    return getTranslatedValue('split_evenly');
-  }
+  String get splitEvenly => getTranslatedValue('split_evenly');
 
-  String get meal{
-    return getTranslatedValue('meal');
-  }
+  String get noEatersSelected => getTranslatedValue('no_eaters_selected');
 
-  String get noEatersSelected{
-    return getTranslatedValue('no_eaters_selected');
-  }
+  String get calculateMeal => getTranslatedValue('calculate_meal');
 
-  String get calculateMeal{
-    return getTranslatedValue('calculate_meal');
-  }
+  String get tipPersentage => getTranslatedValue('tip_percentage');
 
-  String get tipPersentage{
-    return getTranslatedValue('tip_percentage');
-  }
+  String get withTip => getTranslatedValue('with_tip');
 
-  String get withTip{
-    return getTranslatedValue('with_tip');
-  }
+  String get fullPayWithTip => this.fullPayment + ' ' + this.withTip;
 
-  String get fullPayWithTip{
-    return this.fullPayment + ' ' + this.withTip;
-  }
+  String get addExtraHeader => getTranslatedValue('add_extra_header');
+
+  String get extraNameHint => getTranslatedValue('extra_name_hint');
+
+  String get add => getTranslatedValue('add');
+
+  String get clearSelection => getTranslatedValue('clear_selection');
+
+  String get noSavedGroupFound => getTranslatedValue('no_saved_group');
+
+  String get deleteGroupDescription => getTranslatedValue('delete_group_description');
+
+  String get discountTypeLabel => getTranslatedValue('discount_type');
+
+  String get discountAmountType => getTranslatedValue('discount_amount_type');
+
+  String get discountPesentType => getTranslatedValue('discount_persent_type');
+
+  String get discountInputHint => getTranslatedValue('discount_input_hint');
+
+  String get discountPersentRequirement => getTranslatedValue('discount_persent_requirement');
+
+  String get editMealHeader => getTranslatedValue('edit_meal_header');
+
+  String get mealDiscountHeader => getTranslatedValue('meal_discount_header');
+  
+  String get freeMeal => getTranslatedValue('free_meal');
+
+  String get discountIncludeExtras => getTranslatedValue('discount_include_extra');
+
+  String get chooseEaters => getTranslatedValue('choose_eaters');
+
+  String get addExtra => getTranslatedValue('add_extra');
+
+  String get edit => getTranslatedValue('edit');
 }
 
 class _CustomLocalizationDeleget extends LocalizationsDelegate<CustomLocalization>{

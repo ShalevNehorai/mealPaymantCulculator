@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/database_helper.dart';
 import 'package:meal_payment_culculator/dialogs/confirmation_dialog.dart';
 import 'package:shimmer/shimmer.dart';
@@ -29,8 +30,8 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
       curve: Curves.ease,
       builder: (context) {
         return ConfirmationDialog(
-          title: 'are you sure you want to delete ${groupModel.name}?',
-          content: 'this will remove the group ${groupModel.name} from the list',
+          title: '${CustomLocalization.of(context).deletConfirmation} ${groupModel.name}?',
+          content: '${CustomLocalization.of(context).deleteGroupDescription}: ${groupModel.name}',
         );
       },
     ).then((value) async{
@@ -57,7 +58,7 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
           if(snapshot.connectionState == ConnectionState.done){
             List<GroupModel> groups = snapshot.data;
             return groups == null? 
-            Center(heightFactor: 2, child: Text('no saved group found', style: TextStyle(
+            Center(heightFactor: 2, child: Text(CustomLocalization.of(context).noSavedGroupFound, style: TextStyle(
               fontSize: 22.0,
             ),)) 
             : ListView.separated(
@@ -78,7 +79,6 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
                       fontWeight: FontWeight.bold
                     ),),
                   ),
-                  //title: Text(groupModel.getMemdersNames()),
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red,),
                     onPressed: () {
@@ -110,17 +110,7 @@ class _ChooseGroupDialogState extends State<ChooseGroupDialog> {
                   ),
                 )
               )
-            )
-            
-            
-            /*SizedBox(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
-              ),
-              height: MediaQuery.of(context).size.width / 2,
-              width: MediaQuery.of(context).size.width / 2,
-            )*/;
+            );
           }
         }
       ),

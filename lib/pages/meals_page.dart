@@ -171,6 +171,7 @@ class MealsPageState extends State<MealsPage> {
                   sizeFactor: animation,
                   child: MealRow(meal: meal, diners: _diners, 
                     delete: (){
+                      FocusScope.of(context).unfocus();
                       showDialog(context: context,
                         builder: (context) {
                           return ConfirmationDialog(
@@ -230,7 +231,7 @@ class MealsPageState extends State<MealsPage> {
                       focusNode: mealPriceFocus,
                       keyboardType: TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(
-                        hintText: CustomLocalization.of(context).mealPriceHint,
+                        hintText: CustomLocalization.of(context).priceHint,
                         suffixIcon: IconButton(
                           icon: Icon(Icons.clear, size: 18,),
                           onPressed: () => tECMealsPrice.clear(),
@@ -349,7 +350,7 @@ class MealsPageState extends State<MealsPage> {
                     for (Meal meal in _meals) {
                       if(meal.isEatersEmpty()){
                         _scaffoldKey.currentState.showSnackBar(SnackBar(
-                          content: Text('${CustomLocalization.of(context).meal} ${meal.name} ${CustomLocalization.of(context).noEatersSelected}', style: TextStyle(
+                          content: Text(CustomLocalization.of(context).noEatersSelected + ': ' + meal.name, style: TextStyle(
                             fontSize: 22
                           ),),
                           duration: Duration(seconds: 3),

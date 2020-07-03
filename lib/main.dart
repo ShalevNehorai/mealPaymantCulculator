@@ -17,8 +17,6 @@ void main() {
   });
 }
 
-final String appName = "meal payment calc"; 
-
 class Home extends StatefulWidget{
   @override
   AppState createState() => AppState();

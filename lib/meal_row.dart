@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/dialogs/add_extra_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/choose_eaters_dialog.dart';
 import 'package:meal_payment_culculator/dialogs/edit_meal_dialog.dart';
@@ -34,7 +35,7 @@ class _MealRowState extends State<MealRow> {
 
     if(!widget.meal.discount.isEmpty()){
       expendedRows.insert(0, ExtraRow (
-        mealExtra: MealExtra('Discount', -widget.meal.discountAmount),
+        mealExtra: MealExtra(CustomLocalization.of(context).discount, -widget.meal.discountAmount),
         delete: (){
           setState(() {
             widget.meal.clearDiscount();
@@ -52,7 +53,7 @@ class _MealRowState extends State<MealRow> {
       child: ExpansionTile(
         trailing: widget.meal.extras.isEmpty && widget.meal.discount.isEmpty()? Container(width: 0,) : null,
         subtitle: Padding(
-            padding: EdgeInsets.fromLTRB(35, 0, 0, 0),
+            padding: EdgeInsetsDirectional.fromSTEB(35, 0, 0, 0),
             child: Text(widget.meal.eatersString(), style: TextStyle(
               fontSize: 16,
               color: Colors.black
@@ -91,7 +92,7 @@ class _MealRowState extends State<MealRow> {
               Flexible(
                 fit: FlexFit.loose,
                 child: RaisedButton(
-                  child: Text('choose eaters'),
+                  child: Text(CustomLocalization.of(context).chooseEaters.toUpperCase()),
                   onPressed: widget.diners == null? null : () {
                     showAnimatedDialog(
                       context: context,
@@ -121,9 +122,10 @@ class _MealRowState extends State<MealRow> {
                       height: 2.0,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Add extra'),
+                        child: Text(CustomLocalization.of(context).addExtra.toUpperCase()),
                       ),
                       value: (){  
+                        FocusScope.of(context).unfocus();
                         showDialog(
                           context: context, 
                           barrierDismissible: true,
@@ -136,9 +138,10 @@ class _MealRowState extends State<MealRow> {
                       height: 2.0,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Add discount'),
+                        child: Text(CustomLocalization.of(context).addDiscount.toUpperCase()),
                       ),
                       value: (){
+                        FocusScope.of(context).unfocus();
                         showDialog(
                           context: context,
                           builder: (context) => MealDiscountDialog(meal:widget.meal,),
@@ -150,9 +153,10 @@ class _MealRowState extends State<MealRow> {
                       height: 2.0,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Edit'),
+                        child: Text(CustomLocalization.of(context).edit.toUpperCase()),
                       ),
                       value: (){
+                        FocusScope.of(context).unfocus();
                         showDialog(context: context,
                           builder: (context) => EditMealDialog(meal: widget.meal,),
                         ).then((value) => setState((){}));
@@ -163,32 +167,13 @@ class _MealRowState extends State<MealRow> {
                       height: 2.0,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('Delete'),
+                        child: Text(MaterialLocalizations.of(context).deleteButtonTooltip),
                       ),
                       value: widget.delete,
                     ),
                   ];
                 },
               ),
-              /*IconButton(
-                padding: EdgeInsets.symmetric(horizontal: 0.0),
-                icon: Icon(Icons.add),
-                onPressed: () {
-                  showDialog(
-                    context: context, 
-                    barrierDismissible: true,
-                    builder: (context) => AddExtraDialog(meal: widget.meal),
-                  ).then((value) {
-                      context.findAncestorStateOfType<MealsPageState>().setState(() { });
-                    }
-                  );
-                },
-              ),
-              IconButton(
-                padding: EdgeInsets.symmetric(horizontal: 0.0),
-                icon: Icon(Icons.delete, color: Colors.red[600],),
-                onPressed: widget.delete,
-              ),*/
             ],
           ),
         ),

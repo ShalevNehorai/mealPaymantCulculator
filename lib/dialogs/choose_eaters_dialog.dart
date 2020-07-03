@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/meal.dart';
 import 'package:meal_payment_culculator/person.dart';
 
@@ -62,11 +63,12 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Align(
-              alignment: Alignment.centerRight,
+              alignment: AlignmentDirectional.centerEnd,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
                 child: RaisedButton(
-                  child: Text('Done'),
+                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                  color: Theme.of(context).primaryColor,
                   onPressed: () => Navigator.of(context).pop(),
                 ),
               ),
@@ -74,16 +76,16 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                controller: searchTextController,
+                decoration: InputDecoration(
+                  labelText: MaterialLocalizations.of(context).searchFieldLabel,
+                  hintText: MaterialLocalizations.of(context).searchFieldLabel,
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25.0)))
+                ),
                 onChanged: (value) {
                   filterSearchResults(value);
                 },
-                controller: searchTextController,
-                decoration: InputDecoration(
-                    labelText: "Search",
-                    hintText: "Search",
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25.0)))
-                  ),
               ),
             ),
             Flexible(
@@ -117,7 +119,7 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   RaisedButton(
-                    child: Text('Select all'),
+                    child: Text(MaterialLocalizations.of(context).selectAllButtonLabel),
                     onPressed: () {
                       setState(() {
                         widget.meal.addEaters(widget.diners);
@@ -126,7 +128,7 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
                     },
                   ),
                   RaisedButton(
-                    child: Text('Clear selection'),
+                    child: Text(CustomLocalization.of(context).clearSelection),
                     onPressed: () {
                       setState(() {
                         widget.meal.removeAllEates();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/discount.dart';
 import 'package:meal_payment_culculator/meal.dart';
 
@@ -14,9 +15,10 @@ class MealDiscountDialog extends StatefulWidget {
 }
 
 class _MealDiscountDialogState extends State<MealDiscountDialog> {
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   TextEditingController _amountController = TextEditingController();
-  bool _includExtrasSelected = false;
+  bool _includeExtrasSelected = false;
 
   List<bool> _typeSelected = [true, false];
   List<DiscountType> _disTypeList = [DiscountType.AMOUNT, DiscountType.PERSANTAGE];
@@ -26,7 +28,7 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
     super.initState();
     if(!widget.meal.discount.isEmpty()){
       _amountController.text = widget.meal.discount.amount.toString();
-      _includExtrasSelected = widget.meal.dicountIncludExtras;
+      _includeExtrasSelected = widget.meal.dicountIncludExtras;
       _typeSelected = [false, false];
       _typeSelected[_disTypeList.indexOf(widget.meal.discount.type)] = true;
     }
@@ -46,7 +48,7 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: Text('Add discount to ${widget.meal.name}', style: TextStyle(
+              child: Text('${CustomLocalization.of(context).mealDiscountHeader}: ${widget.meal.name}', style: TextStyle(
                 fontSize: 26.0,
                 fontWeight: FontWeight.bold
               ),),
@@ -54,10 +56,10 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: AlignmentDirectional.centerStart,
                 child: RaisedButton(
                   color: Colors.green[500],
-                  child: Text('Free meal', style: TextStyle(
+                  child: Text(CustomLocalization.of(context).freeMeal, style: TextStyle(
                     fontSize: 16.0
                   ),),
                   onPressed: () {
@@ -73,7 +75,7 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text('discount type', style: TextStyle(
+                  Text(CustomLocalization.of(context).discountTypeLabel, style: TextStyle(
                     fontSize: 22
                   ),), 
                   ToggleButtons(
@@ -81,11 +83,11 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('AMOUNT'),
+                        child: Text(CustomLocalization.of(context).discountAmountType),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text('PERSANTAGE'),
+                        child: Text(CustomLocalization.of(context).discountPesentType),
                       )
                     ],
                     onPressed: (index) {
@@ -107,33 +109,51 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text('discount includ extras? ', style: TextStyle(//TODO chack spelling
+                Text(CustomLocalization.of(context).discountIncludeExtras, style: TextStyle(//TODO chack spelling
                   fontSize: 16
                 ),),
                 Flexible(
                   child: Checkbox(
-                    value: _includExtrasSelected,
+                    value: _includeExtrasSelected,
                     onChanged: (value) {
                       setState(() {
-                        _includExtrasSelected = !_includExtrasSelected;
+                        _includeExtrasSelected = !_includeExtrasSelected;
                       });
                     },
                   ),
                 ),
               ],
-            ),   
+            ),
             Flexible(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: TextField(
-                  controller: _amountController,
-                  decoration: InputDecoration(
-                    labelText: 'Enter amount'
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    controller: _amountController,
+                    decoration: InputDecoration(
+                      hintText: CustomLocalization.of(context).discountInputHint
+                    ),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: <TextInputFormatter>[
+                      BlacklistingTextInputFormatter(new RegExp('[\\ |\\, |\\-]')),
+                    ],
+                    validator: (value) {
+                      if(value.isEmpty){
+                        return CustomLocalization.of(context).requiredField;
+                      }
+                      else if(num.tryParse(value) == null){
+                        return CustomLocalization.of(context).numberRequirement;
+                      }
+                      DiscountType type = _disTypeList[_typeSelected.indexOf(true)];
+                      double amount = double.parse(value);
+                      if(type == DiscountType.PERSANTAGE && amount > 100){
+                        return CustomLocalization.of(context).discountPersentRequirement;
+                      }
+
+                      return null;
+                    },
                   ),
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  inputFormatters: <TextInputFormatter>[
-                    BlacklistingTextInputFormatter(new RegExp('[\\ |\\, |\\-]')),
-                  ],
                 ),
               ),
             ),
@@ -143,47 +163,27 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
               children: <Widget>[
                 RaisedButton(
                   color: Colors.red[300],
-                  child: Text('Cancel', style: TextStyle(
+                  child: Text(MaterialLocalizations.of(context).cancelButtonLabel, style: TextStyle(
                     fontSize: 16.0
                   ),),
                   onPressed: () => Navigator.of(context).pop()
                 ),
                 RaisedButton(
                   color: Colors.blue[300],
-                  child: Text('OK', style: TextStyle(
+                  child: Text(MaterialLocalizations.of(context).okButtonLabel, style: TextStyle(
                     fontSize: 16.0
                   ),),
                   onPressed: () {
-                    String amountStr = _amountController.text.trim();
+                    if(!_formKey.currentState.validate()){
+                      return;
+                    }
+
+                    double amount = double.parse(_amountController.text.trim());
                     DiscountType type = _disTypeList[_typeSelected.indexOf(true)];
-                    double amount = 0;
-                    String validateMsg;
-                    if(amountStr.isEmpty){
-                      validateMsg = 'Enter discount amount';
-                    }
-                    else if(num.tryParse(amountStr) == null){
-                      validateMsg = 'Enter discount as number';
-                    }
-                    else {
-                      amount = double.parse(amountStr);
-                      if(type == DiscountType.PERSANTAGE){
-                        if(amount > 100){
-                          validateMsg = 'discount in persent cant be more than 100';
-                        }
-                      }
-                    }
-                    if(validateMsg != null){
-                      print('validate error: $validateMsg');
-                      Fluttertoast.showToast(
-                        msg: validateMsg,
-                        fontSize: 25,
-                      );
-                    }
-                    else{
-                      widget.meal.discount = Discount(type: type, amount: amount);
-                      widget.meal.dicountIncludExtras = _includExtrasSelected;
-                      Navigator.of(context).pop();
-                    }
+                                        
+                    widget.meal.discount = Discount(type: type, amount: amount);
+                    widget.meal.dicountIncludExtras = _includeExtrasSelected;
+                    Navigator.of(context).pop();
                   },
                 ),
               ],
