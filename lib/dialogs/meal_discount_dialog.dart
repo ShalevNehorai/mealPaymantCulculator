@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/discount.dart';
 import 'package:meal_payment_culculator/meal.dart';
@@ -109,7 +108,7 @@ class _MealDiscountDialogState extends State<MealDiscountDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(CustomLocalization.of(context).discountIncludeExtras, style: TextStyle(//TODO chack spelling
+                Text(CustomLocalization.of(context).discountIncludeExtras, style: TextStyle(
                   fontSize: 16
                 ),),
                 Flexible(

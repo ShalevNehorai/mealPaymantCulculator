@@ -1,5 +1,5 @@
-enum DiscountType{
-  PERSANTAGE, AMOUNT //TODO check spelling
+enum DiscountType {
+  PERSANTAGE, AMOUNT
 }
 
 class Discount {

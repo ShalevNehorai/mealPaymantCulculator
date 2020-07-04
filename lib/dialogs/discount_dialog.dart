@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/discount.dart';
 

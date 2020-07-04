@@ -9,6 +9,7 @@ import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
 import 'package:meal_payment_culculator/diner_row.dart';
 import 'package:meal_payment_culculator/pages/meals_page.dart';
 import 'package:meal_payment_culculator/person.dart';
+import 'package:meal_payment_culculator/search_bar.dart';
 
 class PersonsPage extends StatefulWidget {
   static String PERSONS_PAGE_ROUTE_NAME = '/persons';
@@ -114,7 +115,8 @@ class _PersonsPageState extends State<PersonsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
+      appBar: SearchBar(),
+      /*AppBar(
         title: Text(CustomLocalization.of(context).dinersHeader, style: TextStyle(
           fontSize: 24,
         ),),
@@ -143,7 +145,7 @@ class _PersonsPageState extends State<PersonsPage> {
             }
           )  
         ],
-      ),
+      ),*/
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.max,
