@@ -67,26 +67,27 @@ class _MealRowState extends State<MealRow> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                constraints: BoxConstraints(minWidth: 90, maxWidth: 90),
-                child: Column(
-                  children: <Widget>[
-                    Text(widget.meal.name, style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.black
-                    ),),
-                    SizedBox(height: 4.0,),
-                    Text(widget.meal.fullPrice.toString(), style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.black
-                    ),),
-                    SizedBox(height: 2.0,),
-                    Text('(${widget.meal.rawPrice})', style: TextStyle(
-                      fontSize: 12.0,
-                      color: Colors.black
-                    ),)
-                  ],
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Column(
+                    children: <Widget>[
+                      Text(widget.meal.name, style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black
+                      ),),
+                      SizedBox(height: 4.0,),
+                      Text(widget.meal.fullPrice.toString(), style: TextStyle(
+                        fontSize: 18.0,
+                        color: Colors.black
+                      ),),
+                      SizedBox(height: 2.0,),
+                      Text('(${widget.meal.rawPrice})', style: TextStyle(
+                        fontSize: 12.0,
+                        color: Colors.black
+                      ),)
+                    ],
+                  ),
                 ),
               ),
               Flexible(
@@ -138,7 +139,7 @@ class _MealRowState extends State<MealRow> {
                       height: 2.0,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(CustomLocalization.of(context).addDiscount.toUpperCase()),
+                        child: Text(CustomLocalization.of(context).addDiscount.toUpperCase(),),
                       ),
                       value: (){
                         FocusScope.of(context).unfocus();

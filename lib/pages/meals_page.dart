@@ -75,7 +75,7 @@ class MealsPageState extends State<MealsPage> {
   void addMeal(Meal meal){
     _meals.add(meal);
     _animatedListKey.currentState.insertItem(_meals.length - 1);
-    changeScrollPosition(_scrollController.position.maxScrollExtent + 250);
+    // changeScrollPosition(_scrollController.position.maxScrollExtent + 250);
     print('${meal.name} was added');
   }
 
