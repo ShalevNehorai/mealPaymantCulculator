@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:meal_payment_culculator/custom_localizer.dart';
 import 'package:meal_payment_culculator/person.dart';
-import 'package:reveal_search_bar/RevealSearchBar.dart';
+import 'package:meal_payment_culculator/search_bar.dart';
 
 class SummaryPage extends StatefulWidget {
   static String SUMMARY_PAGE_ROUTE_NAME = '/summry';
@@ -66,10 +66,11 @@ class _SummaryPageState extends State<SummaryPage> {
     double fullPrice = (ModalRoute.of(context).settings.arguments as Map)['full price'];
 
     return Scaffold(
-      appBar: RevealAppBar(
+      appBar: AnimatedSearchBar(
         searchController: searchController,
         title: Text(CustomLocalization.of(context).summaryHeader),
         revealColor: Colors.blue[700],
+        searchPlaceHolderText: MaterialLocalizations.of(context).searchFieldLabel,
       ),
       body: Column(
         children: [

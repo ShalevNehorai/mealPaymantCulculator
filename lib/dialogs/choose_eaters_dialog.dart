@@ -62,15 +62,30 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Align(
-              alignment: AlignmentDirectional.centerEnd,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
-                child: RaisedButton(
-                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
-                  color: Theme.of(context).primaryColor,
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  RaisedButton(
+                    child: Text(MaterialLocalizations.of(context).selectAllButtonLabel),
+                    onPressed: () {
+                      setState(() {
+                        widget.meal.addEaters(widget.diners);
+                        widget.meal.printEaters();
+                      });
+                    },
+                  ),
+                  RaisedButton(
+                    child: Text(CustomLocalization.of(context).clearSelection),
+                    onPressed: () {
+                      setState(() {
+                        widget.meal.removeAllEates();
+                        widget.meal.printEaters();
+                      });
+                    },
+                  )
+                ],
               ),
             ),
             Padding(
@@ -113,30 +128,15 @@ class _ChooseEatersDialogState extends State<ChooseEatersDialog> {
                 separatorBuilder: (context, index) => Divider(), 
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  RaisedButton(
-                    child: Text(MaterialLocalizations.of(context).selectAllButtonLabel),
-                    onPressed: () {
-                      setState(() {
-                        widget.meal.addEaters(widget.diners);
-                        widget.meal.printEaters();
-                      });
-                    },
-                  ),
-                  RaisedButton(
-                    child: Text(CustomLocalization.of(context).clearSelection),
-                    onPressed: () {
-                      setState(() {
-                        widget.meal.removeAllEates();
-                        widget.meal.printEaters();
-                      });
-                    },
-                  )
-                ],
+            Align(
+              alignment: AlignmentDirectional.centerEnd,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                child: RaisedButton(
+                  child: Text(MaterialLocalizations.of(context).okButtonLabel),
+                  color: Theme.of(context).primaryColor,
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
               ),
             ),
             SizedBox(height: 6,)

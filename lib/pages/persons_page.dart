@@ -115,8 +115,7 @@ class _PersonsPageState extends State<PersonsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: SearchBar(),
-      /*AppBar(
+      appBar: AppBar(
         title: Text(CustomLocalization.of(context).dinersHeader, style: TextStyle(
           fontSize: 24,
         ),),
@@ -145,7 +144,7 @@ class _PersonsPageState extends State<PersonsPage> {
             }
           )  
         ],
-      ),*/
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.max,
@@ -158,9 +157,8 @@ class _PersonsPageState extends State<PersonsPage> {
               physics: const AlwaysScrollableScrollPhysics(),
               itemBuilder: (context, index, animation) {
                 final diner = _diners[index];
-                return FadeTransition(
-                  // sizeFactor: animation,
-                  opacity: animation,
+                return SizeTransition(
+                  sizeFactor: animation,                  
                   child: DinerRow(
                     diner: diner,
                     editName: () {
