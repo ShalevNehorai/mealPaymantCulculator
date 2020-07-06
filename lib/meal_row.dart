@@ -90,21 +90,21 @@ class _MealRowState extends State<MealRow> {
                   ),
                 ),
               ),
-              Flexible(
-                fit: FlexFit.loose,
-                child: RaisedButton(
+              RaisedButton(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
                   child: Text(CustomLocalization.of(context).chooseEaters.toUpperCase()),
-                  onPressed: widget.diners == null? null : () {
-                    showAnimatedDialog(
-                      context: context,
-                      barrierDismissible: true,
-                      animationType: DialogTransitionType.size,
-                      builder: (context) {
-                        return ChooseEatersDialog(meal: widget.meal, diners: widget.diners,);
-                      },
-                    ).then((value) => setState((){}));
-                  },
                 ),
+                onPressed: widget.diners == null? null : () {
+                  showAnimatedDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    animationType: DialogTransitionType.size,
+                    builder: (context) {
+                      return ChooseEatersDialog(meal: widget.meal, diners: widget.diners,);
+                    },
+                  ).then((value) => setState((){}));
+                },
               ),
               PopupMenuButton(
                 onSelected: (value) {
