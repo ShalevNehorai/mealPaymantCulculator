@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:meal_payment_culculator/custom_localizer.dart';
-import 'package:meal_payment_culculator/database_helper.dart';
-import 'package:meal_payment_culculator/dialogs/choose_group_dialog.dart';
-import 'package:meal_payment_culculator/dialogs/input_text_dialog.dart';
-import 'package:meal_payment_culculator/diner_row.dart';
-import 'package:meal_payment_culculator/pages/meals_page.dart';
-import 'package:meal_payment_culculator/person.dart';
-import 'package:meal_payment_culculator/search_bar.dart';
+import 'package:meal_payment_calculator/custom_localizer.dart';
+import 'package:meal_payment_calculator/database_helper.dart';
+import 'package:meal_payment_calculator/dialogs/choose_group_dialog.dart';
+import 'package:meal_payment_calculator/dialogs/input_text_dialog.dart';
+import 'package:meal_payment_calculator/diner_row.dart';
+import 'package:meal_payment_calculator/pages/meals_page.dart';
+import 'package:meal_payment_calculator/person.dart';
 
 class PersonsPage extends StatefulWidget {
   static String PERSONS_PAGE_ROUTE_NAME = '/persons';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:meal_payment_culculator/custom_localizer.dart';
-import 'package:meal_payment_culculator/discount.dart';
+import 'package:meal_payment_calculator/custom_localizer.dart';
+import 'package:meal_payment_calculator/discount.dart';
 
 class DiscountDialog extends StatefulWidget {
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:meal_payment_culculator/custom_localizer.dart';
-import 'package:meal_payment_culculator/pages/meals_page.dart';
-import 'package:meal_payment_culculator/pages/persons_page.dart';
-import 'package:meal_payment_culculator/pages/summary_page.dart';
+import 'package:meal_payment_calculator/custom_localizer.dart';
+import 'package:meal_payment_calculator/pages/meals_page.dart';
+import 'package:meal_payment_calculator/pages/persons_page.dart';
+import 'package:meal_payment_calculator/pages/summary_page.dart';
 
 
 void main() {

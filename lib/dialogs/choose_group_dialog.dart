@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:meal_payment_culculator/custom_localizer.dart';
-import 'package:meal_payment_culculator/database_helper.dart';
-import 'package:meal_payment_culculator/dialogs/confirmation_dialog.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:meal_payment_calculator/custom_localizer.dart';
+import 'package:meal_payment_calculator/database_helper.dart';
+import 'package:meal_payment_calculator/dialogs/confirmation_dialog.dart';
 
 class ChooseGroupDialog extends StatefulWidget {
   @override

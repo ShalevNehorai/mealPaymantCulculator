@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meal_payment_culculator/custom_localizer.dart';
-import 'package:meal_payment_culculator/meal.dart';
-import 'package:meal_payment_culculator/person.dart';
+import 'package:meal_payment_calculator/custom_localizer.dart';
+import 'package:meal_payment_calculator/meal.dart';
+import 'package:meal_payment_calculator/person.dart';
 
 class ChooseEatersDialog extends StatefulWidget {
 

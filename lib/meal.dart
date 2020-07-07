@@ -1,5 +1,5 @@
-import 'package:meal_payment_culculator/discount.dart';
-import 'package:meal_payment_culculator/person.dart';
+import 'package:meal_payment_calculator/discount.dart';
+import 'package:meal_payment_calculator/person.dart';
 
 class Meal{
   String _name;
