@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:meal_payment_culculator/custom_localizer.dart';
-import 'package:meal_payment_culculator/person.dart';
-import 'package:meal_payment_culculator/search_bar.dart';
+import 'package:meal_payment_calculator/custom_localizer.dart';
+import 'package:meal_payment_calculator/person.dart';
+import 'package:meal_payment_calculator/search_bar.dart';
 
 class SummaryPage extends StatefulWidget {
   static String SUMMARY_PAGE_ROUTE_NAME = '/summry';

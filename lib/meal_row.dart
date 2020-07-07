@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:meal_payment_culculator/custom_localizer.dart';
-import 'package:meal_payment_culculator/dialogs/add_extra_dialog.dart';
-import 'package:meal_payment_culculator/dialogs/choose_eaters_dialog.dart';
-import 'package:meal_payment_culculator/dialogs/edit_meal_dialog.dart';
-import 'package:meal_payment_culculator/dialogs/meal_discount_dialog.dart';
-import 'package:meal_payment_culculator/meal.dart';
-import 'package:meal_payment_culculator/pages/meals_page.dart';
-import 'package:meal_payment_culculator/person.dart';
+import 'package:meal_payment_calculator/custom_localizer.dart';
+import 'package:meal_payment_calculator/dialogs/add_extra_dialog.dart';
+import 'package:meal_payment_calculator/dialogs/choose_eaters_dialog.dart';
+import 'package:meal_payment_calculator/dialogs/edit_meal_dialog.dart';
+import 'package:meal_payment_calculator/dialogs/meal_discount_dialog.dart';
+import 'package:meal_payment_calculator/meal.dart';
+import 'package:meal_payment_calculator/pages/meals_page.dart';
+import 'package:meal_payment_calculator/person.dart';
 
 class MealRow extends StatefulWidget {
 

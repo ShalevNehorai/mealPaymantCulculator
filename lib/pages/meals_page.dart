@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
-import 'package:meal_payment_culculator/custom_localizer.dart';
-import 'package:meal_payment_culculator/dialogs/confirmation_dialog.dart';
-import 'package:meal_payment_culculator/dialogs/discount_dialog.dart';
-import 'package:meal_payment_culculator/discount.dart';
-import 'package:meal_payment_culculator/meal.dart';
-import 'package:meal_payment_culculator/meal_row.dart';
-import 'package:meal_payment_culculator/pages/summary_page.dart';
-import 'package:meal_payment_culculator/person.dart';
+import 'package:meal_payment_calculator/custom_localizer.dart';
+import 'package:meal_payment_calculator/dialogs/confirmation_dialog.dart';
+import 'package:meal_payment_calculator/dialogs/discount_dialog.dart';
+import 'package:meal_payment_calculator/discount.dart';
+import 'package:meal_payment_calculator/meal.dart';
+import 'package:meal_payment_calculator/meal_row.dart';
+import 'package:meal_payment_calculator/pages/summary_page.dart';
+import 'package:meal_payment_calculator/person.dart';
 import 'package:number_inc_dec/number_inc_dec.dart';
 
 class MealsPage extends StatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meal_payment_culculator/person.dart';
+import 'package:meal_payment_calculator/person.dart';
 
 class DinerRow extends StatelessWidget {
 
